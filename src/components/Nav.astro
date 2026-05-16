@@ -13,26 +13,17 @@ function isActive(href: string) {
 }
 ---
 
-<nav class="bg-white text-black px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
-  <a href="/" class="flex-shrink-0">
-    <img
-      src="/kaiju-logo-loop.gif"
-      alt="Kaiju TV"
-      class="h-10 w-auto"
-      loading="eager"
-    />
-  </a>
-
-  <ul class="hidden md:flex items-center gap-8">
+<nav class="relative bg-white px-6 py-5 flex items-center justify-center sticky top-0 z-50">
+  <!-- Desktop: links centered -->
+  <ul class="hidden md:flex items-center gap-6">
     {links.map(({ href, label }) => (
       <li>
         <a
           href={href}
-          class={`font-heading text-sm tracking-widest transition-colors duration-200 ${
-            isActive(href)
-              ? 'text-kaiju-red'
-              : 'text-black hover:text-kaiju-red'
-          }`}
+          style={isActive(href)
+            ? 'color:#a0a3a2; font-weight:700; border-bottom:1px solid #6e7373; padding-bottom:2px;'
+            : 'color:#a0a3a2; font-weight:700;'}
+          class="font-body text-sm tracking-widest"
           aria-current={isActive(href) ? 'page' : undefined}
         >
           {label}
@@ -41,37 +32,38 @@ function isActive(href: string) {
     ))}
   </ul>
 
+  <!-- Email pinned to the right -->
   <a
     href="mailto:info@kaiju-tv.com"
-    class="hidden lg:block text-xs text-gray-500 hover:text-kaiju-red transition-colors font-body"
+    class="hidden lg:block absolute right-[80px] text-xs text-kaiju-red hover:text-kaiju-red-hover transition-colors font-body"
   >
     info@kaiju-tv.com
   </a>
 
-  <!-- Mobile menu button -->
+  <!-- Mobile hamburger pinned to the right -->
   <button
     id="mobile-menu-toggle"
-    class="md:hidden flex flex-col gap-1.5 p-2"
+    class="md:hidden absolute right-6 flex flex-col gap-1.5 p-2"
     aria-label="Abrir menú"
   >
-    <span class="block w-6 h-0.5 bg-black"></span>
-    <span class="block w-6 h-0.5 bg-black"></span>
-    <span class="block w-6 h-0.5 bg-black"></span>
+    <span class="block w-6 h-0.5 bg-gray-500"></span>
+    <span class="block w-6 h-0.5 bg-gray-500"></span>
+    <span class="block w-6 h-0.5 bg-gray-500"></span>
   </button>
 </nav>
 
 <!-- Mobile menu -->
 <div
   id="mobile-menu"
-  class="hidden md:hidden bg-white border-t border-gray-100 px-6 py-4 sticky top-[72px] z-40"
+  class="hidden md:hidden bg-white px-6 py-4 sticky top-[68px] z-40"
 >
-  <ul class="flex flex-col gap-4">
+  <ul class="flex flex-col gap-4 text-center">
     {links.map(({ href, label }) => (
       <li>
         <a
           href={href}
-          class={`font-heading text-sm tracking-widest ${
-            isActive(href) ? 'text-kaiju-red' : 'text-black'
+          class={`font-body text-sm tracking-widest ${
+            isActive(href) ? 'text-kaiju-red' : 'text-gray-500'
           }`}
         >
           {label}
@@ -79,10 +71,7 @@ function isActive(href: string) {
       </li>
     ))}
     <li>
-      <a
-        href="mailto:info@kaiju-tv.com"
-        class="font-body text-xs text-gray-500"
-      >
+      <a href="mailto:info@kaiju-tv.com" class="font-body text-xs text-gray-400">
         info@kaiju-tv.com
       </a>
     </li>

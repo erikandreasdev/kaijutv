@@ -54,8 +54,9 @@ All helpers are wrapped in `safeFetch()`, which silently returns `null`/`[]` whe
 Custom tokens defined in `src/styles/global.css`:
 - Colors: `kaiju-bg` (#1a1a1a), `kaiju-dark` (#111111), `kaiju-red` (#f31a02), `kaiju-red-hover` (#c91401)
 - Fonts: `font-heading` (Changa One), `font-body` (Raleway) — loaded from Google Fonts in `BaseLayout.astro`
+- Utilities: `animate-float` — gentle 3s vertical float (`@utility` in `global.css`), used on the hero image
 
-Section rhythm on the homepage: white hero → dark reel/services → red ebook CTA → dark portfolio grid → dark contact CTA.
+Section rhythm on the homepage: white hero → dark reel/services → red ebook CTA → dark portfolio grid → red contact CTA.
 
 ### Key conventions
 

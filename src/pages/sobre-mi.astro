@@ -21,13 +21,14 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
   description="Conoce a Saúl Peña, motion grapher y diseñador freelance especializado en contenido audiovisual."
   settings={settings}
 >
+  <!-- Bio section -->
   <section class="bg-kaiju-bg py-16 px-6">
-    <div class="max-w-5xl mx-auto">
-      <h1 class="font-heading text-3xl md:text-4xl uppercase text-white text-center mb-14">
+    <div class="max-w-[940px] mx-auto">
+      <h1 class="font-heading text-3xl md:text-4xl uppercase text-kaiju-red text-center mb-14">
         ¿NOS CONOCEMOS?
       </h1>
 
-      <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
         <div class="order-2 md:order-1">
           <p class="font-heading text-lg text-white mb-3">
             ¡Me alegra que quieras saber quién está detrás de
@@ -47,7 +48,7 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
             <img
               src={photoUrl}
               alt="Saúl Peña - Kaiju TV"
-              class="w-full max-w-sm object-cover grayscale hover:grayscale-0 transition-all duration-500"
+              class="w-full max-w-sm object-cover"
             />
           ) : (
             <div class="w-full max-w-sm aspect-[3/4] bg-kaiju-dark flex items-center justify-center">
@@ -58,7 +59,12 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
           )}
         </div>
       </div>
+    </div>
+  </section>
 
+  <!-- Stats section — slightly lighter shade to create visual separation -->
+  <section class="bg-[#424545] px-6">
+    <div class="max-w-[940px] mx-auto">
       <StatCounter stats={stats} />
     </div>
   </section>

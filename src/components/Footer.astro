@@ -23,28 +23,29 @@ const socialIcons: Record<string, string> = {
 };
 ---
 
-<footer class="bg-kaiju-dark border-t border-white/10 py-10 px-6">
-  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+<footer class="bg-kaiju-red py-14 px-6">
+  <div class="max-w-[940px] mx-auto flex items-center justify-between gap-6">
+
+    <!-- Logo -->
     <a href="/">
       <img src="/kaiju-blanco.png" alt="Kaiju TV" class="h-8 w-auto" />
     </a>
 
-    <div class="flex items-center gap-6 text-sm font-body">
-      <a href="/aviso-legal" class="text-gray-400 hover:text-white transition-colors">
-        Legal
-      </a>
-      <a href={`mailto:${email}`} class="text-gray-400 hover:text-white transition-colors">
-        {email}
-      </a>
+    <!-- Nav links + email -->
+    <div class="flex items-center gap-6 font-body text-sm">
+      <a href="/aviso-legal" class="text-white/70 hover:text-white transition-colors">Legal</a>
+      <span class="text-white/30">·</span>
+      <a href={`mailto:${email}`} class="text-white/70 hover:text-white transition-colors">{email}</a>
     </div>
 
-    <div class="flex items-center gap-4">
+    <!-- Social icons -->
+    <div class="flex items-center gap-5">
       {socialLinks.map((link) => (
         <a
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="opacity-70 hover:opacity-100 transition-opacity"
+          class="opacity-60 hover:opacity-100 transition-opacity"
           aria-label={link.platform}
         >
           <img
@@ -55,9 +56,16 @@ const socialIcons: Record<string, string> = {
         </a>
       ))}
     </div>
-  </div>
 
-  <p class="text-center text-xs text-gray-600 mt-6 font-body">
-    Desarrollo y programación <a href="https://erikzephyr.github.io/" target="_blank" rel="noopener" class="hover:text-gray-400 transition-colors">Erik Zephyr</a>
-  </p>
+    <!-- Attribution -->
+    <a
+      href="https://github.com/erikandreasdev"
+      target="_blank"
+      rel="noopener"
+      class="font-body text-[10px] text-white/30 hover:text-white/60 transition-colors tracking-widest uppercase"
+    >
+      made by Erik Zephyr
+    </a>
+
+  </div>
 </footer>

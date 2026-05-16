@@ -7,27 +7,21 @@ interface Props {
 const { headline, subtitle } = Astro.props;
 ---
 
-<section class="bg-white text-black py-16 px-6">
-  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+<section class="bg-white text-black px-6 pb-16">
+  <div class="max-w-[940px] mx-auto grid md:grid-cols-2 gap-12 items-center">
     <div>
-      <h1 class="font-heading text-4xl lg:text-6xl uppercase leading-tight text-black">
+      <h1 class="uppercase" style="font-family: Raleway, sans-serif; font-size: 28px; font-weight: 900; line-height: 30px; color: #ff3838;">
         {headline}
       </h1>
       <p class="font-body text-lg text-gray-600 mt-6 leading-relaxed max-w-lg">
         {subtitle}
       </p>
-      <a
-        href="#reel"
-        class="inline-block mt-8 bg-kaiju-red text-white font-heading uppercase tracking-widest px-8 py-3 hover:bg-kaiju-red-hover transition-colors text-sm"
-      >
-        REEL
-      </a>
     </div>
     <div class="flex justify-center">
       <img
         src="/ordenador-con-video.png"
         alt="Kaiju TV - Creación de contenido audiovisual"
-        class="w-full max-w-md"
+        class="w-full max-w-md animate-float"
         loading="eager"
       />
     </div>

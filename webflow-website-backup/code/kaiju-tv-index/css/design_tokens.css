@@ -1,0 +1,33 @@
+/* Design Tokens — extracted by ZipIt from www.kaiju-tv.com */
+
+:root {
+  --color-1: #000000;
+  --color-2: #FFFFFF;
+  --color-3: #333333;
+  --color-4: #FF3838;
+  --color-5: #A0A3A2;
+  --color-6: #3898EC;
+  --color-7: #0000EE;
+  --color-8: #636868;
+  --color-9: #E63838;
+  --color-10: #6E7373;
+  --color-11: #D9D9D9;
+
+  /* Gradients */
+  --gradient-1: linear-gradient(rgb(255, 56, 56), rgb(255, 56, 56));
+  --gradient-2: linear-gradient(rgb(230, 56, 56), rgb(230, 56, 56));
+  --gradient-3: linear-gradient(rgb(35, 36, 36), rgb(35, 36, 36));
+  --gradient-4: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+  --gradient-5: linear-gradient(rgb(66, 69, 69), rgb(66, 69, 69));
+  --gradient-6: linear-gradient(rgb(237, 241, 240), rgb(237, 241, 240));
+  --gradient-7: linear-gradient(rgb(191, 53, 53), rgb(191, 53, 53));
+
+  /* Typography */
+  --font-1: "Arial";
+  --font-2: "Raleway";
+  --font-3: "sans-serif";
+  --font-4: "Times";
+  --font-5: "SF Pro Display";
+  --font-6: "Changa One";
+  --font-7: "system-ui";
+}

@@ -23,15 +23,15 @@ const email = settings?.email ?? 'info@kaiju-tv.com';
     subtitle={settings?.heroSubtitle ?? '¿Quieres contar algo? Cuéntalo con movimiento.'}
   />
 
-  <ReelSection vimeoId={settings?.reelVimeoId} />
+  <ReelSection vimeoId={settings?.reelVimeoId ?? '383493000'} />
 
   <ServicesSection services={services} />
 
   <EbookCTA />
 
   <section class="bg-kaiju-bg py-16 px-6">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="font-heading text-3xl uppercase tracking-widest text-white text-center mb-10">
+    <div class="max-w-[940px] mx-auto">
+      <h2 class="font-heading text-3xl uppercase text-center mb-10">
         PORTFOLIO
       </h2>
 
@@ -41,7 +41,7 @@ const email = settings?.email ?? 'info@kaiju-tv.com';
           <div class="text-center mt-10">
             <a
               href="/portfolio"
-              class="inline-block border border-white text-white font-heading uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
+              class="inline-block border border-white text-white font-heading font-extrabold uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
             >
               VER TODO
             </a>
@@ -54,7 +54,7 @@ const email = settings?.email ?? 'info@kaiju-tv.com';
           </p>
           <a
             href="/portfolio"
-            class="inline-block border border-white text-white font-heading uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
+            class="inline-block border border-white text-white font-heading font-extrabold uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
           >
             VER TODO
           </a>

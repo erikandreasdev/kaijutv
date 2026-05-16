@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-kaiju-bg: #1a1a1a;
-  --color-kaiju-dark: #111111;
-  --color-kaiju-red: #f31a02;
-  --color-kaiju-red-hover: #c91401;
+  --color-kaiju-bg: #232424;     /* --dark-grey: main dark section bg */
+  --color-kaiju-dark: #1a1a1a;   /* slightly deeper dark for cards/inner */
+  --color-kaiju-red: #e63838;    /* --red-background: buttons, footer, CTA bg */
+  --color-kaiju-red-hover: #bf3535;
+  --color-kaiju-red-title: #ff3838; /* --red: heading/title text */
+  --color-kaiju-grey-body: #a0a3a2; /* --grey-body: paragraph text */
+  --color-kaiju-gris-medio: #424545; /* --gris-medio: stats/ebook section bg */
+  --color-kaiju-dim-grey: #6e7373;   /* --dim-grey: nav underline, secondary */
 
-  --font-heading: "Changa One", sans-serif;
+  --font-heading: "Raleway", sans-serif;
   --font-body: "Raleway", sans-serif;
 }
 
@@ -18,4 +22,34 @@ body {
   background-color: var(--color-kaiju-bg);
   color: white;
   font-family: var(--font-body);
+}
+
+p {
+  font-family: Raleway, sans-serif;
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 25px;
+  color: #a0a3a2;
+}
+
+h1, h2, h3, h4 {
+  letter-spacing: 0.03em;
+}
+
+h2 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #ff3838; /* --red: title text on dark bg */
+}
+
+.bg-white h2 { color: #a0a3a2; }
+.bg-kaiju-red h2 { color: #ffffff; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@utility animate-float {
+  animation: float 3s ease-in-out infinite;
 }
