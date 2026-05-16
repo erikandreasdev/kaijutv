@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PortfolioGrid from '../components/PortfolioGrid.astro';
+import { getSiteSettings, getAllProjects } from '../lib/sanity';
+
+const [settings, projects] = await Promise.all([
+  getSiteSettings(),
+  getAllProjects(),
+]);
+---
+
+<BaseLayout
+  title="Kaiju TV - Portfolio"
+  description="Portfolio completo de Kaiju TV — motion graphics, branding, explainer videos, broadcast design y más."
+  settings={settings}
+>
+  <section class="bg-kaiju-bg min-h-screen py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="font-heading text-4xl uppercase tracking-widest text-white text-center mb-10">
+        PORTFOLIO
+      </h1>
+
+      {projects.length > 0 ? (
+        <PortfolioGrid projects={projects} />
+      ) : (
+        <div class="text-center py-24">
+          <p class="text-gray-500 font-body">
+            Añade proyectos en Sanity Studio para verlos aquí.
+          </p>
+          <a
+            href="/studio"
+            class="inline-block mt-6 bg-kaiju-red text-white font-heading uppercase tracking-widest px-8 py-3 text-sm"
+          >
+            IR AL STUDIO
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+</BaseLayout>

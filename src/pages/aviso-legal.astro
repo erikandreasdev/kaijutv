@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSiteSettings } from '../lib/sanity';
+
+const settings = await getSiteSettings();
+---
+
+<BaseLayout
+  title="Aviso Legal — Kaiju TV"
+  description="Aviso legal y política de cookies de Kaiju TV."
+  settings={settings}
+>
+  <section class="bg-kaiju-bg py-16 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="font-heading text-3xl uppercase text-white mb-10">
+        INFORMACIÓN LEGAL Y POLÍTICA DE COOKIES
+      </h1>
+
+      <div class="font-body text-gray-400 text-sm leading-relaxed space-y-8">
+
+        <div>
+          <h2 class="font-heading text-white uppercase text-lg mb-4">
+            Política de cookies
+          </h2>
+          <h3 class="font-heading text-white uppercase text-base mb-3">1 — Información al usuario</h3>
+          <p>
+            Saúl Peña Hernández informa a los usuarios del sitio web sobre su política respecto del
+            tratamiento y protección de los datos de carácter personal de los usuarios y clientes
+            que puedan ser recabados por la navegación o contratación de servicios, a través de su
+            sitio web.
+          </p>
+          <p class="mt-3">
+            Saúl Peña Hernández es el Responsable del tratamiento de los datos personales del Usuario
+            y le informa que estos datos serán tratados de conformidad con lo dispuesto en el
+            Reglamento (UE) 2016/679 de 27 de abril de 2016 (GDPR) y la Ley Orgánica (ES) 15/1999
+            de 13 de diciembre (LOPD).
+          </p>
+          <ul class="list-disc list-inside mt-4 space-y-2">
+            <li><strong class="text-white">Fin del tratamiento:</strong> Mantener una relación comercial con el Usuario, remisión de comunicaciones comerciales, estudios estadísticos y tramitar peticiones.</li>
+            <li><strong class="text-white">Comunicación de los datos:</strong> No se comunicarán los datos a ningún destinatario, salvo por obligación legal.</li>
+          </ul>
+          <p class="mt-4"><strong class="text-white">Derechos del usuario:</strong> Derecho a retirar el consentimiento, acceso, rectificación, portabilidad, supresión, limitación y oposición al tratamiento. También puede presentar reclamación ante la AEPD (<a href="https://www.agpd.es" target="_blank" rel="noopener" class="text-kaiju-red hover:underline">agpd.es</a>).</p>
+          <p class="mt-4">
+            <strong class="text-white">Datos de contacto:</strong> Saúl Peña Hernández — NIF: 79073277J — Avda. José Martí nº10 Esc.A 1º 1 — Tel: 659708713 — Email: <a href="mailto:info@kaiju-tv.com" class="text-kaiju-red hover:underline">info@kaiju-tv.com</a>
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-white uppercase text-base mb-3">2 — Carácter obligatorio de la información</h3>
+          <p>
+            Los Usuarios, mediante la marcación de las casillas correspondientes, aceptan
+            expresamente que sus datos son necesarios para atender su petición. El prestador
+            garantiza que los datos personales no serán cedidos a terceros.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="font-heading text-white uppercase text-base mb-3">3 — Medidas de seguridad</h3>
+          <p>
+            El prestador cumple con todas las disposiciones de la normativa RGPD y ha implementado
+            políticas técnicas y organizativas apropiadas para proteger los derechos y libertades
+            de los Usuarios.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-heading text-white uppercase text-lg mb-4 mt-8">
+            Política de cookies
+          </h2>
+          <p>
+            Esta Política de Cookies es parte integrante de las Condiciones Generales. El acceso y
+            la navegación en el sitio implican la aceptación de las Condiciones Generales.
+          </p>
+
+          <h3 class="font-heading text-white uppercase text-base mb-3 mt-6">¿Qué es una cookie?</h3>
+          <p>
+            Las cookies son archivos que contienen pequeñas cantidades de información que se
+            descargan en el dispositivo del usuario. Su finalidad principal es reconocer al usuario
+            cada vez que accede a <span class="text-white">www.kaiju-tv.com</span>.
+          </p>
+
+          <h3 class="font-heading text-white uppercase text-base mb-3 mt-6">Tipos de cookies utilizadas</h3>
+          <ul class="list-disc list-inside space-y-2">
+            <li><strong class="text-white">Cookies de sesión</strong> (PHPSESSID): Permiten que las variables de sesión sean guardadas en el servidor web. Esencial para el funcionamiento.</li>
+            <li><strong class="text-white">Cookie _ga</strong>: Google Analytics. Almacena un identificador de cliente único. Caducidad: 2 años.</li>
+            <li><strong class="text-white">Cookie _gat</strong>: Google Analytics. Diferencia entre objetos de seguimiento. Caducidad: 10 minutos.</li>
+            <li><strong class="text-white">Cookie _gid</strong>: Google Analytics. Distingue a los usuarios. Duración: 24 horas.</li>
+          </ul>
+
+          <h3 class="font-heading text-white uppercase text-base mb-3 mt-6">Configuración del usuario</h3>
+          <p>
+            Puedes bloquear o configurar las cookies desde las opciones de privacidad de tu
+            navegador: <span class="text-white">Herramientas → Opciones → Privacidad → Cookies</span>.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</BaseLayout>

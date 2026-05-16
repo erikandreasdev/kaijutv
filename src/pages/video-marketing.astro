@@ -1,0 +1,38 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSiteSettings } from '../lib/sanity';
+
+const settings = await getSiteSettings();
+---
+
+<BaseLayout
+  title="Kaiju TV - Video Marketing: Ebook Gratuito"
+  description="Descarga el ebook gratuito de Kaiju TV y descubre las claves del video marketing para tu negocio."
+  settings={settings}
+>
+  <section class="bg-kaiju-bg min-h-screen py-20 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <span class="font-body text-kaiju-red text-xs uppercase tracking-widest">Ebook Gratuito</span>
+      <h1 class="font-heading text-4xl md:text-5xl uppercase text-white mt-4 mb-6 leading-tight">
+        LAS CLAVES DEL VIDEO MARKETING
+      </h1>
+      <p class="font-body text-gray-400 leading-relaxed mb-10 max-w-xl mx-auto">
+        Descubre los 4 formatos de video imprescindibles para tu publicidad digital, cómo crear contenido
+        que conecte con tu audiencia y mucho más en nuestro ebook gratuito.
+      </p>
+
+      <div class="bg-kaiju-dark border border-white/10 rounded-sm p-10 max-w-md mx-auto">
+        <p class="font-heading text-white uppercase text-xl mb-2">Próximamente</p>
+        <p class="font-body text-gray-500 text-sm">
+          El ebook estará disponible muy pronto. Mientras tanto, escríbenos directamente.
+        </p>
+        <a
+          href="mailto:info@kaiju-tv.com"
+          class="inline-block mt-6 bg-kaiju-red text-white font-heading uppercase tracking-widest px-8 py-3 hover:bg-kaiju-red-hover transition-colors text-sm"
+        >
+          CONTÁCTANOS
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

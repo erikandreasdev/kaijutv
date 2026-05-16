@@ -1,0 +1,61 @@
+---
+import type { Service } from '../lib/sanity';
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  services: Service[];
+}
+
+const { services } = Astro.props;
+
+const defaultServices = [
+  {
+    _id: 'default-1',
+    title: 'Explainer videos',
+    description: 'Videos explicativos para presentar servicios, productos o promociones.',
+    order: 1,
+  },
+  {
+    _id: 'default-2',
+    title: 'Contenido para RRSS',
+    description: 'Piezas para redes sociales enfocadas en generar contenido de interés para el usuario.',
+    order: 2,
+  },
+  {
+    _id: 'default-3',
+    title: 'Publicidad online',
+    description: 'Formatos de animación muy breves diseñados para Email marketing o Facebook Ads.',
+    order: 3,
+  },
+];
+
+const displayServices = services.length > 0 ? services : defaultServices;
+---
+
+<section class="bg-kaiju-bg py-16 px-6">
+  <div class="max-w-6xl mx-auto">
+    <h2 class="font-heading text-3xl uppercase tracking-widest text-white text-center mb-12">
+      SERVICIOS
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      {displayServices.map((svc) => (
+        <div class="text-center p-6">
+          {svc.icon && (
+            <img
+              src={urlFor(svc.icon).width(80).url()}
+              alt={svc.title}
+              class="w-16 h-16 object-contain mx-auto mb-4"
+            />
+          )}
+          <h3 class="font-heading text-lg uppercase text-white mb-3">
+            {svc.title}
+          </h3>
+          <p class="font-body text-gray-400 text-sm leading-relaxed">
+            {svc.description}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+interface Props {
+  email: string;
+}
+
+const { email } = Astro.props;
+---
+
+<section class="bg-kaiju-bg py-16 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+    <h2 class="font-heading text-3xl md:text-4xl uppercase text-white mb-6">
+      CUÉNTAME TU PROYECTO
+    </h2>
+    <p class="font-body text-gray-400 leading-relaxed mb-8 max-w-2xl mx-auto">
+      Promocionar tus servicios con un video explicativo, destacarte en redes sociales con banners y
+      loops animados, crear tu propia marca dinámica con video corporativo... Todo eso y más lo podemos
+      cocinar juntos. ¡No te cortes, cuéntame tu proyecto y solicita tu presupuesto!
+    </p>
+    <a
+      href={`mailto:${email}`}
+      class="inline-block bg-kaiju-red text-white font-heading uppercase tracking-widest px-10 py-4 hover:bg-kaiju-red-hover transition-colors text-sm"
+    >
+      ENVÍA UN EMAIL
+    </a>
+  </div>
+</section>

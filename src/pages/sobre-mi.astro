@@ -1,0 +1,65 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StatCounter from '../components/StatCounter.astro';
+import { getSiteSettings, urlFor } from '../lib/sanity';
+
+const settings = await getSiteSettings();
+
+const defaultStats = [
+  { _key: 'years', value: '7', label: 'Años de experiencia' },
+  { _key: 'clients', value: '36', label: 'Clientes satisfechos' },
+  { _key: 'projects', value: '+250', label: 'Proyectos acabados' },
+];
+
+const stats = settings?.aboutStats?.length ? settings.aboutStats : defaultStats;
+const bio = settings?.aboutBio ?? '';
+const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).url() : null;
+---
+
+<BaseLayout
+  title="Kaiju TV - Sobre Mí"
+  description="Conoce a Saúl Peña, motion grapher y diseñador freelance especializado en contenido audiovisual."
+  settings={settings}
+>
+  <section class="bg-kaiju-bg py-16 px-6">
+    <div class="max-w-5xl mx-auto">
+      <h1 class="font-heading text-3xl md:text-4xl uppercase text-white text-center mb-14">
+        ¿NOS CONOCEMOS?
+      </h1>
+
+      <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+        <div class="order-2 md:order-1">
+          <p class="font-heading text-lg text-white mb-3">
+            ¡Me alegra que quieras saber quién está detrás de
+            <span class="text-kaiju-red">Kaiju</span>!
+          </p>
+          <div class="font-body text-gray-400 leading-relaxed space-y-4 text-sm">
+            {bio ? (
+              bio.split('\n\n').map((para) => <p>{para}</p>)
+            ) : (
+              <p class="text-gray-600">Configura la biografía en Sanity Studio.</p>
+            )}
+          </div>
+        </div>
+
+        <div class="order-1 md:order-2 flex justify-center">
+          {photoUrl ? (
+            <img
+              src={photoUrl}
+              alt="Saúl Peña - Kaiju TV"
+              class="w-full max-w-sm object-cover grayscale hover:grayscale-0 transition-all duration-500"
+            />
+          ) : (
+            <div class="w-full max-w-sm aspect-[3/4] bg-kaiju-dark flex items-center justify-center">
+              <p class="text-gray-600 font-body text-xs text-center px-4">
+                Añade la foto en Sanity Studio
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <StatCounter stats={stats} />
+    </div>
+  </section>
+</BaseLayout>

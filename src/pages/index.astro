@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import ReelSection from '../components/ReelSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import EbookCTA from '../components/EbookCTA.astro';
+import PortfolioGrid from '../components/PortfolioGrid.astro';
+import ContactCTA from '../components/ContactCTA.astro';
+import { getSiteSettings, getFeaturedProjects, getServices } from '../lib/sanity';
+
+const [settings, featuredProjects, services] = await Promise.all([
+  getSiteSettings(),
+  getFeaturedProjects(),
+  getServices(),
+]);
+
+const email = settings?.email ?? 'info@kaiju-tv.com';
+---
+
+<BaseLayout settings={settings}>
+  <HeroSection
+    headline={settings?.heroHeadline ?? 'CREACIÓN DE CONTENIDO AUDIOVISUAL'}
+    subtitle={settings?.heroSubtitle ?? '¿Quieres contar algo? Cuéntalo con movimiento.'}
+  />
+
+  <ReelSection vimeoId={settings?.reelVimeoId} />
+
+  <ServicesSection services={services} />
+
+  <EbookCTA />
+
+  <section class="bg-kaiju-bg py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="font-heading text-3xl uppercase tracking-widest text-white text-center mb-10">
+        PORTFOLIO
+      </h2>
+
+      {featuredProjects.length > 0 ? (
+        <>
+          <PortfolioGrid projects={featuredProjects} />
+          <div class="text-center mt-10">
+            <a
+              href="/portfolio"
+              class="inline-block border border-white text-white font-heading uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
+            >
+              VER TODO
+            </a>
+          </div>
+        </>
+      ) : (
+        <div class="text-center py-16">
+          <p class="text-gray-500 font-body mb-6">
+            Añade proyectos en Sanity Studio para verlos aquí.
+          </p>
+          <a
+            href="/portfolio"
+            class="inline-block border border-white text-white font-heading uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
+          >
+            VER TODO
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <ContactCTA email={email} />
+</BaseLayout>

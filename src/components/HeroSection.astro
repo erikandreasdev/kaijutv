@@ -1,0 +1,35 @@
+---
+interface Props {
+  headline: string;
+  subtitle: string;
+}
+
+const { headline, subtitle } = Astro.props;
+---
+
+<section class="bg-white text-black py-16 px-6">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h1 class="font-heading text-4xl lg:text-6xl uppercase leading-tight text-black">
+        {headline}
+      </h1>
+      <p class="font-body text-lg text-gray-600 mt-6 leading-relaxed max-w-lg">
+        {subtitle}
+      </p>
+      <a
+        href="#reel"
+        class="inline-block mt-8 bg-kaiju-red text-white font-heading uppercase tracking-widest px-8 py-3 hover:bg-kaiju-red-hover transition-colors text-sm"
+      >
+        REEL
+      </a>
+    </div>
+    <div class="flex justify-center">
+      <img
+        src="/ordenador-con-video.png"
+        alt="Kaiju TV - Creación de contenido audiovisual"
+        class="w-full max-w-md"
+        loading="eager"
+      />
+    </div>
+  </div>
+</section>

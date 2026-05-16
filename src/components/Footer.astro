@@ -1,0 +1,63 @@
+---
+import type { SiteSettings } from '../lib/sanity';
+
+interface Props {
+  settings?: SiteSettings | null;
+}
+
+const { settings } = Astro.props;
+
+const email = settings?.email ?? 'info@kaiju-tv.com';
+const socialLinks = settings?.socialLinks ?? [
+  { _key: 'vimeo', platform: 'vimeo', url: 'https://vimeo.com/kaijutv' },
+  { _key: 'instagram', platform: 'instagram', url: 'https://www.instagram.com/kaijutv/' },
+  { _key: 'behance', platform: 'behance', url: 'https://www.behance.net/kaijutv' },
+  { _key: 'facebook', platform: 'facebook', url: 'https://www.facebook.com/Kaiju-Tv-618382831833862/' },
+];
+
+const socialIcons: Record<string, string> = {
+  vimeo: '/icons/vimeo.png',
+  instagram: '/icons/instagram.png',
+  behance: '/icons/behance.png',
+  facebook: '/icons/facebook.png',
+};
+---
+
+<footer class="bg-kaiju-dark border-t border-white/10 py-10 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <a href="/">
+      <img src="/kaiju-blanco.png" alt="Kaiju TV" class="h-8 w-auto" />
+    </a>
+
+    <div class="flex items-center gap-6 text-sm font-body">
+      <a href="/aviso-legal" class="text-gray-400 hover:text-white transition-colors">
+        Legal
+      </a>
+      <a href={`mailto:${email}`} class="text-gray-400 hover:text-white transition-colors">
+        {email}
+      </a>
+    </div>
+
+    <div class="flex items-center gap-4">
+      {socialLinks.map((link) => (
+        <a
+          href={link.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="opacity-70 hover:opacity-100 transition-opacity"
+          aria-label={link.platform}
+        >
+          <img
+            src={socialIcons[link.platform] ?? '/icons/vimeo.png'}
+            alt={link.platform}
+            class="w-6 h-6 object-contain"
+          />
+        </a>
+      ))}
+    </div>
+  </div>
+
+  <p class="text-center text-xs text-gray-600 mt-6 font-body">
+    Desarrollo y programación <a href="https://erikzephyr.github.io/" target="_blank" rel="noopener" class="hover:text-gray-400 transition-colors">Erik Zephyr</a>
+  </p>
+</footer>

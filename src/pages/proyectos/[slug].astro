@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getSiteSettings, getProjectBySlug, getAllProjectSlugs, extractVimeoId } from '../../lib/sanity';
+
+export async function getStaticPaths() {
+  const slugs = await getAllProjectSlugs();
+  return slugs.map(({ slug }) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const [settings, project] = await Promise.all([
+  getSiteSettings(),
+  getProjectBySlug(slug as string),
+]);
+
+if (!project) {
+  return Astro.redirect('/portfolio');
+}
+
+const vimeoId = project.vimeoUrl ? extractVimeoId(project.vimeoUrl) : null;
+
+const categoryLabels: Record<string, string> = {
+  'motion-graphics': 'Motion Graphics',
+  'branding': 'Branding',
+  'explainer-video': 'Explainer Video',
+  'contenido-rrss': 'Contenido RRSS',
+  'publicidad-online': 'Publicidad Online',
+  'broadcast-design': 'Broadcast Design',
+  'brand-video': 'Brand Video',
+  'otro': 'Otro',
+};
+---
+
+<BaseLayout
+  title={`${project.title} — Kaiju TV`}
+  description={project.description ?? `Proyecto de Kaiju TV: ${project.title}`}
+  settings={settings}
+>
+  <article class="bg-kaiju-bg min-h-screen py-12 px-6">
+    <div class="max-w-4xl mx-auto">
+      <!-- Back link -->
+      <a
+        href="/portfolio"
+        class="inline-flex items-center gap-2 text-gray-500 hover:text-white font-body text-sm mb-8 transition-colors"
+      >
+        ← PORTFOLIO
+      </a>
+
+      <!-- Title & category -->
+      <div class="mb-8">
+        {project.category && (
+          <span class="font-body text-xs uppercase tracking-widest text-kaiju-red">
+            {categoryLabels[project.category] ?? project.category}
+          </span>
+        )}
+        <h1 class="font-heading text-3xl md:text-5xl uppercase text-white mt-2 leading-tight">
+          {project.title}
+        </h1>
+      </div>
+
+      <!-- Vimeo embed -->
+      {vimeoId && (
+        <div class="relative w-full mb-10" style="padding-top: 56.25%">
+          <iframe
+            class="absolute inset-0 w-full h-full"
+            src={`https://player.vimeo.com/video/${vimeoId}?color=f31a02&title=0&byline=0&portrait=0`}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            title={project.title}
+          ></iframe>
+        </div>
+      )}
+
+      <!-- Description -->
+      {project.description && (
+        <div class="prose prose-invert max-w-none font-body text-gray-400 leading-relaxed">
+          {project.description.split('\n').map((para) => (
+            <p class="mb-4">{para}</p>
+          ))}
+        </div>
+      )}
+
+      <!-- CTA -->
+      <div class="mt-16 pt-8 border-t border-white/10 text-center">
+        <p class="font-body text-gray-500 text-sm mb-4">
+          ¿Te gusta lo que ves?
+        </p>
+        <a
+          href="mailto:info@kaiju-tv.com"
+          class="inline-block bg-kaiju-red text-white font-heading uppercase tracking-widest px-8 py-3 hover:bg-kaiju-red-hover transition-colors text-sm"
+        >
+          CUÉNTAME TU PROYECTO
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

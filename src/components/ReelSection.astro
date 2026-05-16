@@ -1,0 +1,36 @@
+---
+interface Props {
+  vimeoId?: string;
+}
+
+const { vimeoId } = Astro.props;
+---
+
+<section id="reel" class="bg-kaiju-bg py-16 px-6">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="font-heading text-3xl uppercase tracking-widest text-white text-center mb-3">
+      REEL
+    </h2>
+    <p class="font-body text-gray-400 text-center mb-10">
+      Algunos ejemplos de lo que podemos llegar a crear juntos.
+    </p>
+
+    {vimeoId ? (
+      <div class="relative w-full" style="padding-top: 56.25%">
+        <iframe
+          class="absolute inset-0 w-full h-full"
+          src={`https://player.vimeo.com/video/${vimeoId}?color=f31a02&title=0&byline=0&portrait=0`}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          title="Kaiju TV Reel"
+        ></iframe>
+      </div>
+    ) : (
+      <div class="relative w-full bg-kaiju-dark flex items-center justify-center" style="padding-top: 56.25%">
+        <p class="absolute inset-0 flex items-center justify-center text-gray-500 font-body">
+          Configura el reel en Sanity Studio
+        </p>
+      </div>
+    )}
+  </div>
+</section>

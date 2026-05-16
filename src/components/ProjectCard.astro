@@ -1,0 +1,39 @@
+---
+import type { Project } from '../lib/sanity';
+import { urlFor } from '../lib/sanity';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const slug = project.slug.current;
+
+const thumbnailUrl = project.thumbnail
+  ? urlFor(project.thumbnail).url()
+  : null;
+---
+
+<a
+  href={`/proyectos/${slug}`}
+  class="relative group block overflow-hidden bg-kaiju-dark aspect-video"
+>
+  {thumbnailUrl ? (
+    <img
+      src={thumbnailUrl}
+      alt={project.title}
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      loading="lazy"
+    />
+  ) : (
+    <div class="w-full h-full bg-gray-800 flex items-center justify-center">
+      <span class="text-gray-500 font-body text-xs">Sin imagen</span>
+    </div>
+  )}
+
+  <div class="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+    <h3 class="font-heading text-white uppercase text-sm leading-tight">
+      {project.title}
+    </h3>
+  </div>
+</a>

@@ -1,0 +1,20 @@
+---
+import type { Stat } from '../lib/sanity';
+
+interface Props {
+  stats: Stat[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="grid grid-cols-3 gap-6 text-center py-12">
+  {stats.map((stat) => (
+    <div>
+      <p class="font-heading text-4xl md:text-6xl text-kaiju-red">{stat.value}</p>
+      <p class="font-body text-xs md:text-sm uppercase tracking-widest text-gray-400 mt-2">
+        {stat.label}
+      </p>
+    </div>
+  ))}
+</div>
