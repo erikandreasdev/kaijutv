@@ -4,6 +4,8 @@ import react from '@astrojs/react';
 import sanity from '@sanity/astro';
 import tailwindcss from '@tailwindcss/vite';
 
+import cloudflare from '@astrojs/cloudflare';
+
 export default defineConfig({
   integrations: [
     react(),
@@ -14,7 +16,10 @@ export default defineConfig({
       studioBasePath: '/studio',
     }),
   ],
+
   vite: {
     plugins: [tailwindcss()],
   },
+
+  adapter: cloudflare(),
 });
