@@ -5,8 +5,8 @@ import { schemaTypes } from './src/sanity/schemas';
 export default defineConfig({
   name: 'kaijutv',
   title: 'Kaiju TV',
-  projectId: process.env.PUBLIC_SANITY_PROJECT_ID || 'placeholder',
-  dataset: process.env.PUBLIC_SANITY_DATASET || 'production',
+  projectId: import.meta.env.PUBLIC_SANITY_PROJECT_ID || 'placeholder',
+  dataset: import.meta.env.PUBLIC_SANITY_DATASET || 'production',
   plugins: [
     structureTool({
       structure: (S) =>
