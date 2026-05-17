@@ -29,6 +29,7 @@ export interface Project {
   client?: string;
   thumbnail?: SanityImageSource;
   vimeoUrl?: string;
+  behanceUrl?: string;
   description?: string;
   gallery?: SanityImageSource[];
   featured: boolean;

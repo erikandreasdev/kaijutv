@@ -56,6 +56,12 @@ export const project = defineType({
       description: 'Ej: https://vimeo.com/383493000',
     }),
     defineField({
+      name: 'behanceUrl',
+      title: 'URL de Behance',
+      type: 'url',
+      description: 'Ej: https://www.behance.net/gallery/12345/Nombre-Proyecto',
+    }),
+    defineField({
       name: 'description',
       title: 'Descripción',
       type: 'text',
