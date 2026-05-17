@@ -51,15 +51,32 @@ All helpers are wrapped in `safeFetch()`, which silently returns `null`/`[]` whe
 
 ### Design system
 
-Custom tokens defined in `src/styles/global.css`:
-- Colors: `kaiju-bg` (#1a1a1a), `kaiju-dark` (#111111), `kaiju-red` (#f31a02), `kaiju-red-hover` (#c91401)
-- Fonts: `font-heading` (Changa One), `font-body` (Raleway) — loaded from Google Fonts in `BaseLayout.astro`
-- Utilities: `animate-float` — gentle 3s vertical float (`@utility` in `global.css`), used on the hero image
+Custom tokens defined in `src/styles/global.css` under `@theme`:
 
-Section rhythm on the homepage: white hero → dark reel/services → red ebook CTA → dark portfolio grid → red contact CTA.
+| Token | Value | Usage |
+|-------|-------|-------|
+| `kaiju-bg` | #232424 | Main dark section background |
+| `kaiju-dark` | #1a1a1a | Deeper dark for inner cards |
+| `kaiju-red` | #e63838 | Buttons, footer, CTA backgrounds |
+| `kaiju-red-hover` | #bf3535 | Red button hover state |
+| `kaiju-red-title` | #ff3838 | Heading/title text on dark backgrounds |
+| `kaiju-grey-body` | #a0a3a2 | Paragraph body text |
+| `kaiju-gris-medio` | #424545 | Stats and ebook section background |
+| `kaiju-dim-grey` | #6e7373 | Nav underline, secondary text |
+
+- **Fonts**: both `font-heading` and `font-body` map to Raleway (sans-serif). Changa One is loaded via Google Fonts but not used in CSS tokens. Google Fonts link is in `BaseLayout.astro`.
+- **Utilities**:
+  - `animate-float` — gentle 3s vertical float, used on the hero image
+  - `shadow-inset-top` — `inset 0 28px 40px -18px rgba(0,0,0,0.45)`, applied at every section color-change boundary (white→dark, dark→red). Do NOT apply on grey→grey or red→red transitions.
+
+Section rhythm on the homepage: white hero → dark reel → dark services → grey ebook CTA → dark portfolio grid → red contact CTA → red footer.
 
 ### Key conventions
 
 - `BaseLayout.astro` accepts a `settings` prop (`SiteSettings | null`) passed through to `Footer.astro` for social links and email. Pages that fetch settings should pass it down; pages that don't can omit it (footer falls back to hardcoded defaults).
+- `BaseLayout.astro` renders the Kaiju animated GIF (`/kaiju-logo-loop.gif`) centered in a white section above `<main>` on every page.
 - Buttons are square-cornered (`rounded` is not used), uppercase, `font-heading`, red primary / white ghost.
 - All `.astro` component props are typed with a local `interface Props` block.
+- `h2` global style: Raleway 900, 26px, `#ff3838` on dark backgrounds. Overridden to `#a0a3a2` inside `.bg-white` and `#ffffff` inside `.bg-kaiju-red` via global CSS rules.
+- `StatCounter.astro` numbers use inline `style` (Raleway 700 70px `#ffffff`) rather than Tailwind classes to guarantee exact rendering.
+- `Footer.astro` contains the "Made with ♥ by Erik Andreas" attribution badge with a CSS `heartbeat` animation on hover (defined in a `<style>` block inside the component).
