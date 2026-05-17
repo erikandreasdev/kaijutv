@@ -23,49 +23,65 @@ const socialIcons: Record<string, string> = {
 };
 ---
 
-<footer class="bg-kaiju-red py-14 px-6">
-  <div class="max-w-[940px] mx-auto flex items-center justify-between gap-6">
+<footer class="bg-kaiju-red py-16 px-6">
+  <div class="max-w-[940px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
 
     <!-- Logo -->
     <a href="/">
-      <img src="/kaiju-blanco.png" alt="Kaiju TV" class="h-8 w-auto" />
+      <img src="/kaiju-blanco.png" alt="Kaiju TV" class="h-9 w-auto opacity-90 hover:opacity-100 transition-opacity" />
     </a>
 
-    <!-- Nav links + email -->
-    <div class="flex items-center gap-6 font-body text-sm">
-      <a href="/aviso-legal" class="text-white/70 hover:text-white transition-colors">Legal</a>
-      <span class="text-white/30">·</span>
-      <a href={`mailto:${email}`} class="text-white/70 hover:text-white transition-colors">{email}</a>
-    </div>
-
     <!-- Social icons -->
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-6">
       {socialLinks.map((link) => (
         <a
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="opacity-60 hover:opacity-100 transition-opacity"
+          class="opacity-50 hover:opacity-100 transition-opacity"
           aria-label={link.platform}
         >
           <img
             src={socialIcons[link.platform] ?? '/icons/vimeo.png'}
             alt={link.platform}
-            class="w-6 h-6 object-contain"
+            class="w-5 h-5 object-contain"
           />
         </a>
       ))}
     </div>
 
-    <!-- Attribution -->
+    <!-- Nav links + email -->
+    <div class="flex items-center gap-5 font-body text-xs tracking-wide">
+      <a href="/aviso-legal" class="text-white/50 hover:text-white transition-colors">Aviso Legal</a>
+      <span class="text-white/20">|</span>
+      <a href={`mailto:${email}`} class="text-white/50 hover:text-white transition-colors">{email}</a>
+    </div>
+
+  </div>
+
+  <!-- Attribution badge -->
+  <div class="flex justify-center mt-10">
     <a
       href="https://github.com/erikandreasdev"
       target="_blank"
       rel="noopener"
-      class="font-body text-[10px] text-white/30 hover:text-white/60 transition-colors tracking-widest uppercase"
+      class="group font-body text-sm text-white/70 hover:text-white/90 transition-colors duration-300 px-5 py-2 rounded-sm flex items-center gap-1.5 whitespace-nowrap"
+      style="background: rgba(0,0,0,0.25);"
     >
-      made by Erik Zephyr
+      Made with
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-4 h-4 shrink-0 group-hover:[animation:heartbeat_1.6s_ease-in-out_infinite]">
+        <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+      </svg>
+      by Erik Andreas
     </a>
-
   </div>
+
+  <style>
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      25% { transform: scale(1.3); }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.2); }
+    }
+  </style>
 </footer>

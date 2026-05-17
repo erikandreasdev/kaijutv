@@ -53,3 +53,7 @@ h2 {
 @utility animate-float {
   animation: float 3s ease-in-out infinite;
 }
+
+@utility shadow-inset-top {
+  box-shadow: inset 0 28px 40px -18px rgba(0, 0, 0, 0.45);
+}

@@ -22,28 +22,15 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
   settings={settings}
 >
   <!-- Bio section -->
-  <section class="bg-kaiju-bg py-16 px-6">
+  <section class="shadow-inset-top bg-kaiju-bg py-16 px-6">
     <div class="max-w-[940px] mx-auto">
-      <h1 class="font-heading text-3xl md:text-4xl uppercase text-kaiju-red text-center mb-14">
+      <h2 class="font-heading text-3xl uppercase text-center mb-10">
         ¿NOS CONOCEMOS?
-      </h1>
+      </h2>
 
       <div class="grid md:grid-cols-2 gap-12 items-center">
-        <div class="order-2 md:order-1">
-          <p class="font-heading text-lg text-white mb-3">
-            ¡Me alegra que quieras saber quién está detrás de
-            <span class="text-kaiju-red">Kaiju</span>!
-          </p>
-          <div class="font-body text-gray-400 leading-relaxed space-y-4 text-sm">
-            {bio ? (
-              bio.split('\n\n').map((para) => <p>{para}</p>)
-            ) : (
-              <p class="text-gray-600">Configura la biografía en Sanity Studio.</p>
-            )}
-          </div>
-        </div>
-
-        <div class="order-1 md:order-2 flex justify-center">
+        <!-- Photo: left on desktop, top on mobile -->
+        <div class="flex justify-center">
           {photoUrl ? (
             <img
               src={photoUrl}
@@ -58,6 +45,20 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
             </div>
           )}
         </div>
+
+        <!-- Text: right on desktop -->
+        <div>
+          <p class="font-body text-base text-white/90 mb-4">
+            ¡Me alegra que quieras saber quién está detrás de <strong>Kaiju</strong>!
+          </p>
+          <div class="font-body text-white/75 leading-relaxed space-y-4 text-sm">
+            {bio ? (
+              bio.split('\n\n').map((para) => <p>{para}</p>)
+            ) : (
+              <p class="text-gray-600">Configura la biografía en Sanity Studio.</p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -68,4 +69,6 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
       <StatCounter stats={stats} />
     </div>
   </section>
+
+  <div class="bg-kaiju-bg" style="height: 100px;"></div>
 </BaseLayout>

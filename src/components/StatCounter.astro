@@ -8,11 +8,11 @@ interface Props {
 const { stats } = Astro.props;
 ---
 
-<div class="grid grid-cols-3 gap-6 text-center py-12">
+<div class="grid grid-cols-3 gap-6 text-center py-16">
   {stats.map((stat) => (
     <div>
-      <p class="font-heading text-4xl md:text-6xl text-kaiju-red">{stat.value}</p>
-      <p class="font-body text-xs md:text-sm uppercase tracking-widest text-gray-400 mt-2">
+      <p style="font-family: Raleway, sans-serif; font-size: 70px; font-weight: 700; line-height: 1; color: #ffffff;">{stat.value}</p>
+      <p class="font-body text-sm md:text-base text-white/60 mt-3">
         {stat.label}
       </p>
     </div>

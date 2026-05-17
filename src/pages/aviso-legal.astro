@@ -10,91 +10,89 @@ const settings = await getSiteSettings();
   description="Aviso legal y política de cookies de Kaiju TV."
   settings={settings}
 >
-  <section class="bg-kaiju-bg py-16 px-6" style="box-shadow: inset 0 40px 50px -23px rgba(0,0,0,0.75);">
-    <div class="max-w-[940px] mx-auto">
-      <h1 class="font-heading text-3xl uppercase text-kaiju-red mb-10">
-        INFORMACIÓN LEGAL Y POLÍTICA DE COOKIES
-      </h1>
+  <section class="shadow-inset-top bg-kaiju-bg py-20 px-6">
+    <div class="max-w-[860px] mx-auto flex flex-col gap-8">
 
-      <div class="font-body text-gray-400 text-sm leading-relaxed space-y-8">
+      <!-- Box 1: Información legal -->
+      <div class="bg-white p-8 md:p-10" style="box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 6px 20px rgba(0,0,0,0.15);">
+        <h2 class="font-heading uppercase text-kaiju-red text-lg mb-6 leading-tight">
+          Información legal y política de cookies
+        </h2>
+        <div class="font-body text-gray-600 text-sm leading-relaxed space-y-6">
 
-        <div>
-          <h2 class="font-heading uppercase text-lg mb-4">
-            Política de cookies
-          </h2>
-          <h3 class="font-heading text-white uppercase text-base mb-3">1 — Información al usuario</h3>
-          <p>
-            Saúl Peña Hernández informa a los usuarios del sitio web sobre su política respecto del
-            tratamiento y protección de los datos de carácter personal de los usuarios y clientes
-            que puedan ser recabados por la navegación o contratación de servicios, a través de su
-            sitio web.
-          </p>
-          <p class="mt-3">
-            Saúl Peña Hernández es el Responsable del tratamiento de los datos personales del Usuario
-            y le informa que estos datos serán tratados de conformidad con lo dispuesto en el
-            Reglamento (UE) 2016/679 de 27 de abril de 2016 (GDPR) y la Ley Orgánica (ES) 15/1999
-            de 13 de diciembre (LOPD).
-          </p>
-          <ul class="list-disc list-inside mt-4 space-y-2">
-            <li><strong class="text-white">Fin del tratamiento:</strong> Mantener una relación comercial con el Usuario, remisión de comunicaciones comerciales, estudios estadísticos y tramitar peticiones.</li>
-            <li><strong class="text-white">Comunicación de los datos:</strong> No se comunicarán los datos a ningún destinatario, salvo por obligación legal.</li>
-          </ul>
-          <p class="mt-4"><strong class="text-white">Derechos del usuario:</strong> Derecho a retirar el consentimiento, acceso, rectificación, portabilidad, supresión, limitación y oposición al tratamiento. También puede presentar reclamación ante la AEPD (<a href="https://www.agpd.es" target="_blank" rel="noopener" class="text-kaiju-red hover:underline">agpd.es</a>).</p>
-          <p class="mt-4">
-            <strong class="text-white">Datos de contacto:</strong> Saúl Peña Hernández — NIF: 79073277J — Avda. José Martí nº10 Esc.A 1º 1 — Tel: 659708713 — Email: <a href="mailto:info@kaiju-tv.com" class="text-kaiju-red hover:underline">info@kaiju-tv.com</a>
-          </p>
+          <div>
+            <h3 class="font-heading uppercase text-gray-900 text-sm mb-2">1 — Información al usuario</h3>
+            <p>Saúl Peña Hernández informa a los usuarios del sitio web sobre su política respecto del tratamiento y protección de los datos de carácter personal de los usuarios y clientes que puedan ser recabados por la navegación o contratación de servicios, a través de su sitio web.</p>
+            <p class="mt-3">Saúl Peña Hernández es el Responsable del tratamiento de los datos personales del Usuario y le informa que estos datos serán tratados de conformidad con lo dispuesto en las normativas vigentes en materia de protección de datos personales, el Reglamento (UE) 2016/679 de 27 de abril de 2016 (GDPR) y la Ley Orgánica (ES) 15/1999 de 13 de diciembre (LOPD), por lo que se le facilita la siguiente información del tratamiento:</p>
+            <p class="mt-3"><strong class="text-gray-900">Fin del tratamiento:</strong> Mantener una relación comercial con el Usuario.</p>
+            <p class="mt-3"><strong class="text-gray-900">Las operaciones previstas para realizar el tratamiento son:</strong> Remisión de comunicaciones comerciales publicitarias por email. Realizar estudios estadísticos. Tramitar encargos, solicitudes o cualquier tipo de petición que sea realizada por el usuario. Los datos se conservarán mientras exista un interés mutuo para mantener el fin del tratamiento.</p>
+            <p class="mt-3"><strong class="text-gray-900">Comunicación de los datos:</strong> No se comunicarán los datos a ningún destinatario, salvo por obligación legal.</p>
+            <p class="mt-3"><strong class="text-gray-900">Derechos que asisten al Usuario:</strong> Derecho a retirar el consentimiento en cualquier momento. Derecho de acceso, rectificación, portabilidad y supresión de sus datos y a la limitación u oposición a su tratamiento. Derecho a presentar una reclamación ante la Autoridad de control (<a href="https://www.agpd.es" target="_blank" rel="noopener" class="text-kaiju-red hover:underline">agpd.es</a>) si considera que el tratamiento no se ajusta a la normativa vigente.</p>
+            <p class="mt-3"><strong class="text-gray-900">Datos de contacto para ejercer sus derechos:</strong> Saúl Peña Hernández — NIF: 79073277J — Dir. postal: Avda. José Martí nº10 Esc.A 1º 1 — Teléfono: 659708713 — Correo elect: <a href="mailto:info@kaiju-tv.com" class="text-kaiju-red hover:underline">info@kaiju-tv.com</a></p>
+          </div>
+
+          <div>
+            <h3 class="font-heading uppercase text-gray-900 text-sm mb-2">2 — Carácter obligatorio de la información</h3>
+            <p>Los Usuarios, mediante la marcación de las casillas correspondientes y entrada de datos en los campos marcados con un asterisco (*) en el formulario de contacto, aceptan expresamente y de forma libre e inequívoca, que sus datos son necesarios para atender su petición, siendo voluntaria la inclusión de datos en los campos restantes.</p>
+            <p class="mt-3">El Usuario garantiza que los datos personales facilitados al prestador son veraces y se hace responsable de comunicar cualquier modificación de los mismos.</p>
+            <p class="mt-3">El prestador informa y garantiza expresamente a los usuarios que sus datos personales no serán cedidos en ningún caso a terceros, y que siempre que realizara algún tipo de cesión de datos personales, se pedirá previamente el consentimiento expreso, informado e inequívoco por parte de los Usuarios.</p>
+          </div>
+
+          <div>
+            <h3 class="font-heading uppercase text-gray-900 text-sm mb-2">3 — Medidas de seguridad</h3>
+            <p>De conformidad con lo dispuesto en las normativas vigentes en materia de protección de datos personales, el prestador está cumpliendo con todas las disposiciones de la normativa RGPD para el tratamiento de los datos personales de su responsabilidad, y manifiestamente con los principios descritos en el artículo 5 del RGPD, por el cual son tratados de manera lícita, leal y transparente.</p>
+            <p class="mt-3">El prestador garantiza que ha implementado políticas técnicas y organizativas apropiadas para aplicar las medidas de seguridad que establecen el GDPR y la LOPD con el fin de proteger los derechos y libertades de los Usuarios.</p>
+          </div>
+
         </div>
-
-        <div>
-          <h3 class="font-heading text-white uppercase text-base mb-3">2 — Carácter obligatorio de la información</h3>
-          <p>
-            Los Usuarios, mediante la marcación de las casillas correspondientes, aceptan
-            expresamente que sus datos son necesarios para atender su petición. El prestador
-            garantiza que los datos personales no serán cedidos a terceros.
-          </p>
-        </div>
-
-        <div>
-          <h3 class="font-heading text-white uppercase text-base mb-3">3 — Medidas de seguridad</h3>
-          <p>
-            El prestador cumple con todas las disposiciones de la normativa RGPD y ha implementado
-            políticas técnicas y organizativas apropiadas para proteger los derechos y libertades
-            de los Usuarios.
-          </p>
-        </div>
-
-        <div>
-          <h2 class="font-heading uppercase text-lg mb-4 mt-8">
-            Política de cookies
-          </h2>
-          <p>
-            Esta Política de Cookies es parte integrante de las Condiciones Generales. El acceso y
-            la navegación en el sitio implican la aceptación de las Condiciones Generales.
-          </p>
-
-          <h3 class="font-heading text-white uppercase text-base mb-3 mt-6">¿Qué es una cookie?</h3>
-          <p>
-            Las cookies son archivos que contienen pequeñas cantidades de información que se
-            descargan en el dispositivo del usuario. Su finalidad principal es reconocer al usuario
-            cada vez que accede a <span class="text-white">www.kaiju-tv.com</span>.
-          </p>
-
-          <h3 class="font-heading text-white uppercase text-base mb-3 mt-6">Tipos de cookies utilizadas</h3>
-          <ul class="list-disc list-inside space-y-2">
-            <li><strong class="text-white">Cookies de sesión</strong> (PHPSESSID): Permiten que las variables de sesión sean guardadas en el servidor web. Esencial para el funcionamiento.</li>
-            <li><strong class="text-white">Cookie _ga</strong>: Google Analytics. Almacena un identificador de cliente único. Caducidad: 2 años.</li>
-            <li><strong class="text-white">Cookie _gat</strong>: Google Analytics. Diferencia entre objetos de seguimiento. Caducidad: 10 minutos.</li>
-            <li><strong class="text-white">Cookie _gid</strong>: Google Analytics. Distingue a los usuarios. Duración: 24 horas.</li>
-          </ul>
-
-          <h3 class="font-heading text-white uppercase text-base mb-3 mt-6">Configuración del usuario</h3>
-          <p>
-            Puedes bloquear o configurar las cookies desde las opciones de privacidad de tu
-            navegador: <span class="text-white">Herramientas → Opciones → Privacidad → Cookies</span>.
-          </p>
-        </div>
-
       </div>
+
+      <!-- Box 2: Política de cookies -->
+      <div class="bg-white p-8 md:p-10" style="box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 6px 20px rgba(0,0,0,0.15);">
+        <h2 class="font-heading uppercase text-kaiju-red text-lg mb-6 leading-tight">
+          Política de cookies
+        </h2>
+        <div class="font-body text-gray-600 text-sm leading-relaxed space-y-6">
+
+          <div>
+            <h3 class="font-heading uppercase text-gray-900 text-sm mb-2">1 — Política de cookies</h3>
+            <p>Esta Política de Cookies es parte integrante de las Condiciones Generales y la Política de Privacidad. El acceso y la navegación en el sitio, o el uso de los servicios del mismo, implican la aceptación de las Condiciones Generales.</p>
+            <p class="mt-3"><strong class="text-gray-900">¿Qué es una cookie?</strong> Las cookies son archivos que contienen pequeñas cantidades de información que se descargan en el dispositivo del usuario cuando visitas un sitio web. Su finalidad principal es reconocer al usuario cada vez que accede a <span class="text-gray-900">www.kaiju-tv.com</span> y nos permite mejorar la calidad y usabilidad de nuestra web.</p>
+            <p class="mt-3"><strong class="text-gray-900">Tipos de cookies:</strong></p>
+            <ul class="mt-2 space-y-2 list-disc list-inside">
+              <li><strong class="text-gray-900">Cookies de Sesión:</strong> Duran solo por la duración de tu visita y se borran al cerrar el navegador. No contienen información personal identificable.</li>
+              <li><strong class="text-gray-900">Cookies Persistentes:</strong> Se almacenan en el disco duro y poseen una fecha de caducidad determinada. Permiten identificar acciones y preferencias del usuario.</li>
+              <li><strong class="text-gray-900">Cookies de Funcionalidad:</strong> Permiten recordar decisiones adoptadas por el usuario. La información que recogen se anonimiza.</li>
+              <li><strong class="text-gray-900">Cookies de Terceros:</strong> Instaladas por un sitio web distinto al que visitas, como redes sociales (Facebook) o complementos externos (Google Maps).</li>
+              <li><strong class="text-gray-900">Cookies Analíticas:</strong> Tienen por finalidad el mantenimiento periódico y garantizar el mejor funcionamiento del sitio, recopilando datos de tu actividad.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="font-heading uppercase text-gray-900 text-sm mb-2">2 — Uso de cookies por parte de www.kaiju-tv.com</h3>
+            <p>Mediante el acceso a www.kaiju-tv.com, aceptas de manera expresa que podamos usar este tipo de cookies en tus dispositivos. Si desactivas las cookies, puede que tu navegación no sea óptima.</p>
+            <ul class="mt-3 space-y-2 list-disc list-inside">
+              <li><strong class="text-gray-900">Cookie PHPSESSID</strong> (Sesión): Permite que las variables de sesión sean guardadas en el servidor web. Esencial para el funcionamiento de la web.</li>
+              <li><strong class="text-gray-900">Cookie _ga</strong> (Analytics): Google Analytics. Almacena un identificador de cliente único para control de visitas. Caducidad: 2 años.</li>
+              <li><strong class="text-gray-900">Cookie _gat</strong> (Analytics): Google Analytics. Diferencia entre objetos de seguimiento creados en la sesión. Caducidad: 10 minutos.</li>
+              <li><strong class="text-gray-900">Cookie _gid</strong> (Analytics): Google Analytics. Se usa para distinguir a los usuarios. Duración: 24 horas.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="font-heading uppercase text-gray-900 text-sm mb-2">3 — Configuración del usuario para evitar cookies</h3>
+            <p>Puedes bloquear las cookies a través de las herramientas de configuración del navegador o configurarlo para que te avise cuando un servidor quiera guardar una cookie:</p>
+            <ul class="mt-3 space-y-1 list-disc list-inside">
+              <li><strong class="text-gray-900">Internet Explorer:</strong> Herramientas → Opciones de Internet → Privacidad → Configuración.</li>
+              <li><strong class="text-gray-900">Firefox:</strong> Herramientas → Opciones → Privacidad → Cookies.</li>
+              <li><strong class="text-gray-900">Chrome:</strong> Opciones → Opciones avanzadas → Privacidad.</li>
+              <li><strong class="text-gray-900">Opera:</strong> Seguridad y Privacidad.</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   </section>
 </BaseLayout>

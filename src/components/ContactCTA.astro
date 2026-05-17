@@ -6,16 +6,15 @@ interface Props {
 const { email } = Astro.props;
 ---
 
-<section class="bg-kaiju-red py-36 px-6">
-  <!-- White card centered on the red background -->
-  <div class="max-w-[940px] mx-auto bg-white p-6 md:p-8" style="box-shadow: 0 32px 80px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.12);">
+<section class="shadow-inset-top bg-kaiju-red py-24 px-6">
+  <div class="max-w-[840px] mx-auto bg-white p-10 md:p-16" style="box-shadow: 0 24px 64px rgba(0,0,0,0.22), 0 6px 20px rgba(0,0,0,0.10);">
     <div class="flex flex-col md:flex-row items-center gap-10">
 
-      <div class="flex-1">
-        <h2 class="font-heading uppercase mb-4" style="color: #ff3838;">
+      <div class="flex-1 min-w-0">
+        <h2 class="font-heading uppercase mb-3 text-xl leading-tight" style="color: #ff3838;">
           CUÉNTAME TU PROYECTO
         </h2>
-        <p class="text-gray-500 mb-8">
+        <p class="text-gray-500 text-sm leading-relaxed mb-7">
           Promocionar tus servicios con un video explicativo, destacarte en redes sociales con
           banners y loops animados, crear tu propia marca dinámica con video corporativo.... Todo eso
           y más lo podemos cocinar juntos, ¡no te cortes, cuéntame tu proyecto y solicita tu presupuesto!
