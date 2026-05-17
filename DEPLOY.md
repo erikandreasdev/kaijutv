@@ -2,35 +2,23 @@
 
 This site is a fully static Astro build (`output: 'static'`), making it a perfect fit for Cloudflare Pages. Build runs at deploy time; Sanity data is fetched then and baked into the HTML.
 
+A `wrangler.toml` is included for Cloudflare Workers static asset deployment (name: `kaijutv`, compatibility date: `2025-05-16`, assets directory: `./dist`).
+
 ---
 
 ## Prerequisites
 
 - Cloudflare account (free at cloudflare.com)
 - Sanity project created and credentials ready (see `.env.example`)
-- Code pushed to a GitHub or GitLab repository
+- Code pushed to GitHub: `https://github.com/erikandreasdev/kaijutv`
 
 ---
 
-## Step 1 — Push the code to GitHub
-
-If you haven't already:
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-gh repo create kaijutv-website --private --source=. --push
-# or push to an existing remote manually
-```
-
----
-
-## Step 2 — Create a Cloudflare Pages project
+## Step 1 — Create a Cloudflare Pages project
 
 1. Go to **Cloudflare Dashboard → Workers & Pages → Create → Pages**
 2. Click **Connect to Git** and authorize Cloudflare to access your GitHub account
-3. Select the `kaijutv-website` repository
+3. Select the `kaijutv` repository
 4. Configure the build:
 
 | Setting | Value |
@@ -42,7 +30,7 @@ gh repo create kaijutv-website --private --source=. --push
 
 ---
 
-## Step 3 — Set environment variables
+## Step 2 — Set environment variables
 
 In the Pages project settings (**Settings → Environment variables**), add these under **Production** (and optionally **Preview**):
 
@@ -57,19 +45,19 @@ In the Pages project settings (**Settings → Environment variables**), add thes
 
 ---
 
-## Step 4 — Add your Cloudflare domain to Sanity CORS
+## Step 3 — Add your Cloudflare domain to Sanity CORS
 
-Cloudflare Pages assigns a URL like `https://kaijutv-website.pages.dev`. The embedded Sanity Studio at `/studio` makes browser requests from that origin.
+Cloudflare Pages assigns a URL like `https://kaijutv.pages.dev`. The embedded Sanity Studio at `/studio` makes browser requests from that origin.
 
 1. Go to **sanity.io/manage → your project → API → CORS origins**
-2. Add `https://kaijutv-website.pages.dev` (allow credentials: yes)
+2. Add `https://kaijutv.pages.dev` (allow credentials: yes)
 3. If you set up a custom domain (e.g. `kaiju-tv.com`), add that too
 
 ---
 
-## Step 5 — Deploy
+## Step 4 — Deploy
 
-Click **Save and Deploy** in the Cloudflare Pages wizard. The first build takes ~2–3 minutes. When it finishes, your site is live at `https://kaijutv-website.pages.dev`.
+Click **Save and Deploy** in the Cloudflare Pages wizard. The first build takes ~2–3 minutes. When it finishes, your site is live at `https://kaijutv.pages.dev`.
 
 ---
 
