@@ -45,6 +45,11 @@ export const project = defineType({
       description: 'Sube aquí el GIF animado o imagen estática del proyecto.',
     }),
     defineField({
+      name: 'client',
+      title: 'Cliente',
+      type: 'string',
+    }),
+    defineField({
       name: 'vimeoUrl',
       title: 'URL de Vimeo',
       type: 'url',
@@ -55,6 +60,13 @@ export const project = defineType({
       title: 'Descripción',
       type: 'text',
       rows: 4,
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Galería de imágenes',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
+      description: 'Imágenes adicionales que se muestran debajo del vídeo en la página del proyecto.',
     }),
     defineField({
       name: 'featured',

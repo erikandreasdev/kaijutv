@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getSiteSettings, getProjectBySlug, getAllProjectSlugs, extractVimeoId } from '../../lib/sanity';
+import { getSiteSettings, getProjectBySlug, getAllProjectSlugs, extractVimeoId, urlFor } from '../../lib/sanity';
 
 export async function getStaticPaths() {
   const slugs = await getAllProjectSlugs();
@@ -36,62 +36,84 @@ const categoryLabels: Record<string, string> = {
   description={project.description ?? `Proyecto de Kaiju TV: ${project.title}`}
   settings={settings}
 >
-  <article class="bg-kaiju-bg min-h-screen py-12 px-6">
-    <div class="max-w-[940px] mx-auto">
+  <article class="shadow-inset-top bg-kaiju-bg min-h-screen">
+
+    <!-- Full-width Vimeo embed -->
+    {vimeoId && (
+      <div class="relative w-full" style="padding-top: 56.25%">
+        <iframe
+          class="absolute inset-0 w-full h-full"
+          src={`https://player.vimeo.com/video/${vimeoId}?color=e63838&title=0&byline=0&portrait=0`}
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowfullscreen
+          title={project.title}
+        ></iframe>
+      </div>
+    )}
+
+    <div class="max-w-[940px] mx-auto px-6 py-12">
+
       <!-- Back link -->
       <a
         href="/portfolio"
-        class="inline-flex items-center gap-2 text-gray-500 hover:text-white font-body text-sm mb-8 transition-colors"
+        class="inline-flex items-center gap-2 text-gray-500 hover:text-white font-body text-xs uppercase tracking-widest mb-10 transition-colors"
+        style="letter-spacing: 0.03em;"
       >
         ← PORTFOLIO
       </a>
 
-      <!-- Title & category -->
-      <div class="mb-8">
-        {project.category && (
-          <span class="font-body text-xs uppercase tracking-widest text-kaiju-red">
-            {categoryLabels[project.category] ?? project.category}
-          </span>
+      <!-- Title + client (left) / Description (right) -->
+      <div class="grid md:grid-cols-2 gap-10 mb-12">
+        <div>
+          {project.category && (
+            <span class="font-body text-xs uppercase text-kaiju-red tracking-widest">
+              {categoryLabels[project.category] ?? project.category}
+            </span>
+          )}
+          <h1 class="font-heading text-2xl md:text-3xl uppercase text-white mt-2 leading-tight">
+            {project.title}
+          </h1>
+          {project.client && (
+            <p class="font-body text-sm text-gray-500 mt-2 uppercase tracking-wide">
+              {project.client}
+            </p>
+          )}
+        </div>
+
+        {project.description && (
+          <div class="font-body text-gray-400 text-sm leading-relaxed">
+            {project.description.split('\n').map((para) => (
+              <p class="mb-3">{para}</p>
+            ))}
+          </div>
         )}
-        <h1 class="font-heading text-3xl md:text-5xl uppercase text-white mt-2 leading-tight">
-          {project.title}
-        </h1>
       </div>
 
-      <!-- Vimeo embed -->
-      {vimeoId && (
-        <div class="relative w-full mb-10" style="padding-top: 56.25%">
-          <iframe
-            class="absolute inset-0 w-full h-full"
-            src={`https://player.vimeo.com/video/${vimeoId}?color=f31a02&title=0&byline=0&portrait=0`}
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowfullscreen
-            title={project.title}
-          ></iframe>
-        </div>
-      )}
-
-      <!-- Description -->
-      {project.description && (
-        <div class="prose prose-invert max-w-none font-body text-gray-400 leading-relaxed">
-          {project.description.split('\n').map((para) => (
-            <p class="mb-4">{para}</p>
+      <!-- Gallery -->
+      {project.gallery && project.gallery.length > 0 && (
+        <div class="flex flex-col gap-2">
+          {project.gallery.map((image) => (
+            <img
+              src={urlFor(image).width(1880).url()}
+              alt={project.title}
+              class="w-full object-cover"
+              loading="lazy"
+            />
           ))}
         </div>
       )}
 
       <!-- CTA -->
       <div class="mt-16 pt-8 border-t border-white/10 text-center">
-        <p class="font-body text-gray-500 text-sm mb-4">
-          ¿Te gusta lo que ves?
-        </p>
+        <p class="font-body text-gray-500 text-sm mb-4">¿Te gusta lo que ves?</p>
         <a
-          href="mailto:info@kaiju-tv.com"
+          href={`mailto:${settings?.email ?? 'info@kaiju-tv.com'}`}
           class="inline-block bg-kaiju-red text-white font-heading font-extrabold uppercase tracking-widest px-8 py-3 hover:bg-kaiju-red-hover transition-colors text-sm"
         >
           CUÉNTAME TU PROYECTO
         </a>
       </div>
+
     </div>
   </article>
 </BaseLayout>

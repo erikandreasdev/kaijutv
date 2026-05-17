@@ -26,9 +26,11 @@ export interface Project {
   title: string;
   slug: { current: string };
   category: string;
+  client?: string;
   thumbnail?: SanityImageSource;
   vimeoUrl?: string;
   description?: string;
+  gallery?: SanityImageSource[];
   featured: boolean;
   order: number;
 }
@@ -49,6 +51,7 @@ export interface SiteSettings {
   heroHeadline: string;
   heroSubtitle: string;
   reelVimeoId?: string;
+  aboutIntro: string;
   aboutBio: string;
   aboutPhoto?: SanityImageSource;
   aboutStats: Stat[];
