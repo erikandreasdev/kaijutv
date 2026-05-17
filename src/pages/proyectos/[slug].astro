@@ -36,23 +36,22 @@ const categoryLabels: Record<string, string> = {
   description={project.description ?? `Proyecto de Kaiju TV: ${project.title}`}
   settings={settings}
 >
-  <article class="bg-kaiju-bg min-h-screen relative">
+  <article class="bg-kaiju-bg min-h-screen">
 
-    <!-- Back arrow — absolute top-left, no text -->
-    <a
-      href="/portfolio"
-      aria-label="Volver al portfolio"
-      class="absolute top-5 left-5 z-10 text-kaiju-red hover:text-white transition-colors"
-      style="font-size: 2rem; line-height: 1;"
-    >
-      &#8592;
-    </a>
+    <div class="max-w-[940px] mx-auto px-6 pt-16 pb-16">
 
-    <div class="max-w-[940px] mx-auto px-6 pt-14 pb-16">
+      <!-- Back arrow — aligned to container left, no text -->
+      <a
+        href="/portfolio"
+        aria-label="Volver al portfolio"
+        class="inline-block mb-10 opacity-60 hover:opacity-100 transition-opacity"
+      >
+        <img src="/back-arrow.png" alt="Volver" class="w-10 h-10 object-contain" />
+      </a>
 
       <!-- Vimeo embed -->
       {vimeoId && (
-        <div class="relative w-full mb-8" style="padding-top: 56.25%">
+        <div class="relative w-full mb-14" style="padding-top: 56.25%">
           <iframe
             class="absolute inset-0 w-full h-full"
             src={`https://player.vimeo.com/video/${vimeoId}?color=e63838&title=0&byline=0&portrait=0`}
@@ -64,13 +63,8 @@ const categoryLabels: Record<string, string> = {
       )}
 
       <!-- Title (left) + Description (right) -->
-      <div class="grid md:grid-cols-2 gap-10 mb-10">
+      <div class="grid md:grid-cols-2 gap-10 mb-14">
         <div>
-          {project.category && (
-            <span class="font-body text-xs uppercase text-kaiju-red block mb-2" style="letter-spacing: 0.03em;">
-              {categoryLabels[project.category] ?? project.category}
-            </span>
-          )}
           <h2 class="font-heading uppercase leading-tight">
             {project.title}
           </h2>
@@ -84,8 +78,9 @@ const categoryLabels: Record<string, string> = {
               href={project.behanceUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-block mt-6 border border-white/30 text-white/70 font-heading font-extrabold uppercase text-xs tracking-widest px-6 py-3 hover:border-white hover:text-white transition-colors"
+              class="inline-flex items-center gap-3 mt-6 text-white/70 hover:text-white transition-colors font-body text-sm"
             >
+              <img src="/icons/behance.png" alt="Behance" class="w-8 h-8 object-contain" />
               Ver en Behance
             </a>
           )}

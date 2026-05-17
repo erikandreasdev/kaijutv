@@ -26,6 +26,12 @@ export const siteSettings = defineType({
       description: 'Solo el número. Ej: 383493000',
     }),
     defineField({
+      name: 'aboutIntro',
+      title: 'Introducción (Sobre Mí)',
+      type: 'string',
+      initialValue: '¡Me alegra que quieras saber quién está detrás de Kaiju!',
+    }),
+    defineField({
       name: 'aboutBio',
       title: 'Biografía (Sobre Mí)',
       type: 'text',

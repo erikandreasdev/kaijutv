@@ -12,6 +12,7 @@ const defaultStats = [
 ];
 
 const stats = settings?.aboutStats?.length ? settings.aboutStats : defaultStats;
+const intro = settings?.aboutIntro ?? '¡Me alegra que quieras saber quién está detrás de Kaiju!';
 const bio = settings?.aboutBio ?? '';
 const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).url() : null;
 ---
@@ -48,9 +49,7 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
 
         <!-- Text: right on desktop -->
         <div>
-          <p class="font-body text-base text-white/90 mb-4">
-            ¡Me alegra que quieras saber quién está detrás de <strong>Kaiju</strong>!
-          </p>
+          <p class="font-body text-base text-white/90 mb-4">{intro}</p>
           <div class="font-body text-white/75 leading-relaxed space-y-4 text-sm">
             {bio ? (
               bio.split('\n\n').map((para) => <p>{para}</p>)
