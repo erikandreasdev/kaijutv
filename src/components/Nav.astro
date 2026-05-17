@@ -21,9 +21,9 @@ function isActive(href: string) {
         <a
           href={href}
           style={isActive(href)
-            ? 'color:#a0a3a2; font-weight:700; border-bottom:1px solid #6e7373; padding-bottom:2px;'
-            : 'color:#a0a3a2; font-weight:700;'}
-          class="font-body text-sm tracking-widest"
+            ? 'letter-spacing:0.03em; color:#a0a3a2; font-weight:700; border-bottom:1px solid #6e7373; padding-bottom:2px;'
+            : 'letter-spacing:0.03em; color:#a0a3a2; font-weight:700;'}
+          class="font-body text-sm"
           aria-current={isActive(href) ? 'page' : undefined}
         >
           {label}
@@ -62,9 +62,8 @@ function isActive(href: string) {
       <li>
         <a
           href={href}
-          class={`font-body text-sm tracking-widest ${
-            isActive(href) ? 'text-kaiju-red' : 'text-gray-500'
-          }`}
+          class={`font-body text-sm ${isActive(href) ? 'text-kaiju-red' : 'text-gray-500'}`}
+          style="letter-spacing:0.03em;"
         >
           {label}
         </a>
