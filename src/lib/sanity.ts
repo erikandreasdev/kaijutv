@@ -21,6 +21,10 @@ export function urlFor(source: SanityImageSource) {
 
 // --- Types ---
 
+export type GalleryItem =
+  | (SanityImageSource & { _type: 'image'; _key: string })
+  | { _type: 'vimeoItem'; _key: string; vimeoUrl: string };
+
 export interface Project {
   _id: string;
   title: string;
@@ -31,7 +35,7 @@ export interface Project {
   vimeoUrl?: string;
   behanceUrl?: string;
   description?: string;
-  gallery?: SanityImageSource[];
+  gallery?: GalleryItem[];
   featured: boolean;
   order: number;
 }

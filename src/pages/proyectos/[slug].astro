@@ -36,37 +36,38 @@ const categoryLabels: Record<string, string> = {
   description={project.description ?? `Proyecto de Kaiju TV: ${project.title}`}
   settings={settings}
 >
-  <article class="bg-kaiju-bg min-h-screen">
+  <article class="bg-kaiju-bg min-h-screen relative">
 
-    <!-- Full-width Vimeo embed -->
-    {vimeoId && (
-      <div class="relative w-full" style="padding-top: 56.25%">
-        <iframe
-          class="absolute inset-0 w-full h-full"
-          src={`https://player.vimeo.com/video/${vimeoId}?color=e63838&title=0&byline=0&portrait=0`}
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowfullscreen
-          title={project.title}
-        ></iframe>
-      </div>
-    )}
+    <!-- Back arrow — absolute top-left, no text -->
+    <a
+      href="/portfolio"
+      aria-label="Volver al portfolio"
+      class="absolute top-5 left-5 z-10 text-kaiju-red hover:text-white transition-colors"
+      style="font-size: 2rem; line-height: 1;"
+    >
+      &#8592;
+    </a>
 
-    <div class="max-w-[940px] mx-auto px-6 py-10">
+    <div class="max-w-[940px] mx-auto px-6 pt-14 pb-16">
 
-      <!-- Back arrow -->
-      <a
-        href="/portfolio"
-        class="inline-flex items-center gap-2 font-body text-xs uppercase text-kaiju-red hover:text-white transition-colors mb-10"
-        style="letter-spacing: 0.03em;"
-      >
-        ← Volver al portfolio
-      </a>
+      <!-- Vimeo embed -->
+      {vimeoId && (
+        <div class="relative w-full mb-8" style="padding-top: 56.25%">
+          <iframe
+            class="absolute inset-0 w-full h-full"
+            src={`https://player.vimeo.com/video/${vimeoId}?color=e63838&title=0&byline=0&portrait=0`}
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowfullscreen
+            title={project.title}
+          ></iframe>
+        </div>
+      )}
 
       <!-- Title (left) + Description (right) -->
-      <div class="grid md:grid-cols-2 gap-10 mb-4">
+      <div class="grid md:grid-cols-2 gap-10 mb-10">
         <div>
           {project.category && (
-            <span class="font-body text-xs uppercase text-kaiju-red tracking-widest block mb-2">
+            <span class="font-body text-xs uppercase text-kaiju-red block mb-2" style="letter-spacing: 0.03em;">
               {categoryLabels[project.category] ?? project.category}
             </span>
           )}
@@ -74,7 +75,7 @@ const categoryLabels: Record<string, string> = {
             {project.title}
           </h2>
           {project.client && (
-            <p class="font-body text-sm text-gray-500 mt-3 uppercase" style="letter-spacing: 0.03em;">
+            <p class="font-body text-sm text-gray-500 mt-2 uppercase" style="letter-spacing: 0.03em;">
               {project.client}
             </p>
           )}
@@ -99,16 +100,27 @@ const categoryLabels: Record<string, string> = {
         )}
       </div>
 
-      <!-- Gallery — one column, full width -->
+      <!-- Gallery — one column, images and Vimeo embeds from Sanity -->
       {project.gallery && project.gallery.length > 0 && (
-        <div class="flex flex-col gap-1 mt-10">
-          {project.gallery.map((image) => (
-            <img
-              src={urlFor(image).width(1880).url()}
-              alt={project.title}
-              class="w-full block"
-              loading="lazy"
-            />
+        <div class="flex flex-col gap-1">
+          {project.gallery.map((item) => (
+            item._type === 'vimeoItem' ? (
+              <div class="relative w-full" style="padding-top: 56.25%">
+                <iframe
+                  class="absolute inset-0 w-full h-full"
+                  src={`https://player.vimeo.com/video/${extractVimeoId(item.vimeoUrl)}?color=e63838&title=0&byline=0&portrait=0`}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            ) : (
+              <img
+                src={urlFor(item).width(1880).url()}
+                alt={project.title}
+                class="w-full block"
+                loading="lazy"
+              />
+            )
           ))}
         </div>
       )}

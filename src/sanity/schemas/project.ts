@@ -69,10 +69,33 @@ export const project = defineType({
     }),
     defineField({
       name: 'gallery',
-      title: 'Galería de imágenes',
+      title: 'Galería (imágenes y vídeos)',
       type: 'array',
-      of: [{ type: 'image', options: { hotspot: true } }],
-      description: 'Imágenes adicionales que se muestran debajo del vídeo en la página del proyecto.',
+      of: [
+        {
+          type: 'image',
+          options: { hotspot: true },
+        },
+        {
+          type: 'object',
+          name: 'vimeoItem',
+          title: 'Vídeo Vimeo',
+          fields: [
+            defineField({
+              name: 'vimeoUrl',
+              title: 'URL de Vimeo',
+              type: 'url',
+              description: 'Ej: https://vimeo.com/383493000',
+              validation: (Rule) => Rule.required(),
+            }),
+          ],
+          preview: {
+            select: { url: 'vimeoUrl' },
+            prepare: ({ url }: { url: string }) => ({ title: '▶ Vídeo Vimeo', subtitle: url }),
+          },
+        },
+      ],
+      description: 'Añade imágenes o vídeos de Vimeo. Se muestran en una columna bajo la descripción.',
     }),
     defineField({
       name: 'featured',
