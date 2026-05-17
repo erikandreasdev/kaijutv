@@ -6,11 +6,11 @@ import ServicesSection from '../components/ServicesSection.astro';
 import EbookCTA from '../components/EbookCTA.astro';
 import PortfolioGrid from '../components/PortfolioGrid.astro';
 import ContactCTA from '../components/ContactCTA.astro';
-import { getSiteSettings, getFeaturedProjects, getServices } from '../lib/sanity';
+import { getSiteSettings, getHomeProjects, getServices } from '../lib/sanity';
 
 const [settings, featuredProjects, services] = await Promise.all([
   getSiteSettings(),
-  getFeaturedProjects(),
+  getHomeProjects(),
   getServices(),
 ]);
 
@@ -38,11 +38,19 @@ const email = settings?.email ?? 'info@kaiju-tv.com';
       {featuredProjects.length > 0 ? (
         <>
           <PortfolioGrid projects={featuredProjects} />
-          <div class="text-center mt-10">
+          <div class="flex justify-end mt-8">
             <a
               href="/portfolio"
-              class="inline-block border border-white text-white font-heading font-extrabold uppercase tracking-widest px-10 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
+              class="group inline-flex items-center gap-2 font-heading font-black uppercase text-sm"
+              style="color: #a0a3a2; letter-spacing: 0.03em;"
             >
+              <svg
+                width="14" height="14" viewBox="0 0 14 14" fill="#424545" xmlns="http://www.w3.org/2000/svg"
+                class="transition-transform duration-300 group-hover:rotate-90 shrink-0"
+              >
+                <rect x="5.5" y="0" width="3" height="14"/>
+                <rect x="0" y="5.5" width="14" height="3"/>
+              </svg>
               VER TODO
             </a>
           </div>

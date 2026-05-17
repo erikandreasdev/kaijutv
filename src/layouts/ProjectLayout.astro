@@ -31,8 +31,8 @@ const {
     />
     <title>{title}</title>
   </head>
-  <body class="bg-kaiju-bg">
-    <main>
+  <body class="bg-kaiju-bg flex flex-col min-h-screen">
+    <main class="flex-1">
       <slot />
     </main>
     <Footer settings={settings} />

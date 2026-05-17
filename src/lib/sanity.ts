@@ -95,6 +95,12 @@ export async function getFeaturedProjects(): Promise<Project[]> {
   )) ?? [];
 }
 
+export async function getHomeProjects(): Promise<Project[]> {
+  return (await safeFetch<Project[]>(
+    `*[_type == "project"] | order(order asc)[0...12]`
+  )) ?? [];
+}
+
 export async function getAllProjects(): Promise<Project[]> {
   return (await safeFetch<Project[]>(`*[_type == "project"] | order(order asc)`)) ?? [];
 }

@@ -32,13 +32,13 @@ const {
     />
     <title>{title}</title>
   </head>
-  <body>
+  <body class="flex flex-col min-h-screen">
     <div class="bg-white h-[50px]"></div>
     <Nav />
     <div class="bg-white flex justify-center pt-8 pb-[100px]">
       <img src="/kaiju-logo-loop.gif" alt="Kaiju TV" class="h-40 w-auto" loading="eager" />
     </div>
-    <main>
+    <main class="flex-1">
       <slot />
     </main>
     <Footer settings={settings} />

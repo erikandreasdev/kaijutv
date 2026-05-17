@@ -23,13 +23,20 @@ const socialIcons: Record<string, string> = {
 };
 ---
 
-<footer class="bg-kaiju-red py-16 px-6">
+<footer class="bg-kaiju-red pt-24 pb-16 px-6">
   <div class="max-w-[940px] mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
 
     <!-- Logo -->
     <a href="/">
       <img src="/kaiju-blanco.png" alt="Kaiju TV" class="h-9 w-auto opacity-90 hover:opacity-100 transition-opacity" />
     </a>
+
+    <!-- Nav links + email -->
+    <div class="flex items-center gap-5 font-body text-xs tracking-wide">
+      <a href="/aviso-legal" class="text-white transition-transform duration-200 hover:scale-105 inline-block">Aviso Legal</a>
+      <span class="text-white/30">|</span>
+      <a href={`mailto:${email}`} class="text-white transition-transform duration-200 hover:scale-105 inline-block">{email}</a>
+    </div>
 
     <!-- Social icons -->
     <div class="flex items-center gap-6">
@@ -38,23 +45,16 @@ const socialIcons: Record<string, string> = {
           href={link.url}
           target="_blank"
           rel="noopener noreferrer"
-          class="opacity-50 hover:opacity-100 transition-opacity"
+          class="inline-block transition-transform duration-200 hover:scale-110"
           aria-label={link.platform}
         >
           <img
             src={socialIcons[link.platform] ?? '/icons/vimeo.png'}
             alt={link.platform}
-            class="w-5 h-5 object-contain"
+            class="w-7 h-7 object-contain"
           />
         </a>
       ))}
-    </div>
-
-    <!-- Nav links + email -->
-    <div class="flex items-center gap-5 font-body text-xs tracking-wide">
-      <a href="/aviso-legal" class="text-white/50 hover:text-white transition-colors">Aviso Legal</a>
-      <span class="text-white/20">|</span>
-      <a href={`mailto:${email}`} class="text-white/50 hover:text-white transition-colors">{email}</a>
     </div>
 
   </div>
