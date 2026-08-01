@@ -9,11 +9,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "check": "astro check",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/node": "^10.1.1",
     "@astrojs/react": "^5.0.5",
+    "@astrojs/sitemap": "^3.7.3",
+    "@portabletext/to-html": "^5.0.2",
+    "@portabletext/types": "4.0.2",
     "@sanity/astro": "^3.4.0",
     "@sanity/client": "^7.22.0",
     "@sanity/image-url": "^2.1.1",
@@ -23,7 +27,12 @@
     "react-dom": "^19.2.6",
     "react-is": "^19.2.6",
     "sanity": "^5.25.1",
+    "sanity-plugin-media": "^6.0.9",
     "styled-components": "^6.4.1",
     "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
   }
 }

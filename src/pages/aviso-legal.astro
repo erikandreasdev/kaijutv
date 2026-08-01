@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import MailLink from '../components/MailLink.astro';
 import { getSiteSettings } from '../lib/sanity';
 
 const settings = await getSiteSettings();
+const email = settings?.email ?? 'info@kaiju-tv.com';
 ---
 
 <BaseLayout
@@ -28,7 +30,7 @@ const settings = await getSiteSettings();
             <p class="mt-3"><strong class="text-gray-900">Las operaciones previstas para realizar el tratamiento son:</strong> Remisión de comunicaciones comerciales publicitarias por email. Realizar estudios estadísticos. Tramitar encargos, solicitudes o cualquier tipo de petición que sea realizada por el usuario. Los datos se conservarán mientras exista un interés mutuo para mantener el fin del tratamiento.</p>
             <p class="mt-3"><strong class="text-gray-900">Comunicación de los datos:</strong> No se comunicarán los datos a ningún destinatario, salvo por obligación legal.</p>
             <p class="mt-3"><strong class="text-gray-900">Derechos que asisten al Usuario:</strong> Derecho a retirar el consentimiento en cualquier momento. Derecho de acceso, rectificación, portabilidad y supresión de sus datos y a la limitación u oposición a su tratamiento. Derecho a presentar una reclamación ante la Autoridad de control (<a href="https://www.agpd.es" target="_blank" rel="noopener" class="text-kaiju-red hover:underline">agpd.es</a>) si considera que el tratamiento no se ajusta a la normativa vigente.</p>
-            <p class="mt-3"><strong class="text-gray-900">Datos de contacto para ejercer sus derechos:</strong> Saúl Peña Hernández — NIF: 79073277J — Dir. postal: Avda. José Martí nº10 Esc.A 1º 1 — Teléfono: 659708713 — Correo elect: <a href="mailto:info@kaiju-tv.com" class="text-kaiju-red hover:underline">info@kaiju-tv.com</a></p>
+            <p class="mt-3"><strong class="text-gray-900">Datos de contacto para ejercer sus derechos:</strong> Saúl Peña Hernández — NIF: 79073277J — Dir. postal: Avda. José Martí nº10 Esc.A 1º 1 — Teléfono: 659708713 — Correo elect: <MailLink email={email} class="text-kaiju-red hover:underline" /></p>
           </div>
 
           <div>

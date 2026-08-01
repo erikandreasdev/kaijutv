@@ -1,20 +1,27 @@
-import { defineField, defineType } from 'sanity';
+import { defineArrayMember, defineField, defineType } from 'sanity';
 
 export const project = defineType({
   name: 'project',
   title: 'Proyecto',
   type: 'document',
+  groups: [
+    { name: 'content', title: 'Contenido', default: true },
+    { name: 'media', title: 'Galería' },
+    { name: 'settings', title: 'Ajustes' },
+  ],
   fields: [
     defineField({
       name: 'title',
       title: 'Título',
       type: 'string',
+      group: 'content',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
+      group: 'content',
       options: { source: 'title', maxLength: 96 },
       validation: (Rule) => Rule.required(),
     }),
@@ -22,6 +29,7 @@ export const project = defineType({
       name: 'category',
       title: 'Categoría',
       type: 'string',
+      group: 'content',
       options: {
         list: [
           { title: 'Motion Graphics', value: 'motion-graphics' },
@@ -38,45 +46,96 @@ export const project = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'thumbnail',
-      title: 'Miniatura',
-      type: 'image',
-      options: { hotspot: true },
-      description: 'Sube aquí el GIF animado o imagen estática del proyecto.',
+      name: 'tags',
+      title: 'Etiquetas / disciplinas',
+      type: 'array',
+      group: 'content',
+      of: [defineArrayMember({ type: 'reference', to: [{ type: 'tag' }] })],
+      description:
+        'Dirección de arte, motion graphics, ilustración… Se usan para filtrar el portfolio. Crea las que necesites en “Etiquetas”.',
+      options: { layout: 'tags' },
     }),
     defineField({
       name: 'client',
       title: 'Cliente',
       type: 'string',
+      group: 'content',
     }),
     defineField({
-      name: 'vimeoUrl',
-      title: 'URL de Vimeo',
-      type: 'url',
-      description: 'Ej: https://vimeo.com/383493000',
-    }),
-    defineField({
-      name: 'behanceUrl',
-      title: 'URL de Behance',
-      type: 'url',
-      description: 'Ej: https://www.behance.net/gallery/12345/Nombre-Proyecto',
+      name: 'body',
+      title: 'Descripción',
+      type: 'blockContent',
+      group: 'content',
+      description:
+        'Admite negrita, cursiva, subrayado, listas, citas y enlaces desde la barra de herramientas.',
     }),
     defineField({
       name: 'description',
-      title: 'Descripción',
+      title: 'Descripción (formato antiguo)',
       type: 'text',
       rows: 4,
+      group: 'content',
+      readOnly: true,
+      // Only surfaces on documents created before the rich-text migration, so
+      // the old copy can be pasted across and the field then disappears.
+      hidden: ({ document }) => !document?.description,
+      description:
+        'Texto plano heredado. Cópialo al campo “Descripción” de arriba y bórralo de aquí; entonces este campo desaparecerá.',
+    }),
+    defineField({
+      name: 'thumbnail',
+      title: 'Miniatura',
+      type: 'image',
+      group: 'media',
+      options: { hotspot: true },
+      description: 'Sube aquí el GIF animado o imagen estática del proyecto.',
+      fields: [
+        defineField({
+          name: 'alt',
+          title: 'Texto alternativo',
+          type: 'string',
+          description: 'Describe la imagen para accesibilidad y SEO.',
+        }),
+      ],
+    }),
+    defineField({
+      name: 'vimeoUrl',
+      title: 'URL de Vimeo (vídeo principal)',
+      type: 'url',
+      group: 'media',
+      description: 'Ej: https://vimeo.com/383493000',
     }),
     defineField({
       name: 'gallery',
       title: 'Galería (imágenes y vídeos)',
       type: 'array',
+      group: 'media',
+      options: { layout: 'grid' },
       of: [
-        {
+        defineArrayMember({
           type: 'image',
           options: { hotspot: true },
-        },
-        {
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Texto alternativo',
+              type: 'string',
+            }),
+            defineField({
+              name: 'caption',
+              title: 'Pie de foto',
+              type: 'string',
+            }),
+            defineField({
+              name: 'wide',
+              title: 'Ocupar todo el ancho',
+              type: 'boolean',
+              description: 'Actívalo para que esta imagen ocupe la fila completa.',
+              initialValue: false,
+            }),
+          ],
+        }),
+        defineArrayMember({
           type: 'object',
           name: 'vimeoItem',
           title: 'Vídeo Vimeo',
@@ -91,22 +150,28 @@ export const project = defineType({
           ],
           preview: {
             select: { url: 'vimeoUrl' },
-            prepare: ({ url }: { url: string }) => ({ title: '▶ Vídeo Vimeo', subtitle: url }),
+            prepare: (selection: Record<string, any>) => ({
+              title: '▶ Vídeo Vimeo',
+              subtitle: selection.url,
+            }),
           },
-        },
+        }),
       ],
-      description: 'Añade imágenes o vídeos de Vimeo. Se muestran en una columna bajo la descripción.',
+      description:
+        'Arrastra varias imágenes a la vez desde tu carpeta (o pulsa “Add item” → “Image” → puedes seleccionar múltiples archivos). Se suben directamente a Sanity, no hace falta ningún servicio externo. Al pulsar en una foto en la web se abre a pantalla completa.',
     }),
     defineField({
       name: 'featured',
       title: 'Destacado en home',
       type: 'boolean',
+      group: 'settings',
       initialValue: false,
     }),
     defineField({
       name: 'order',
       title: 'Orden (menor = primero)',
       type: 'number',
+      group: 'settings',
       initialValue: 99,
     }),
   ],
@@ -119,8 +184,9 @@ export const project = defineType({
   ],
   preview: {
     select: { title: 'title', media: 'thumbnail', featured: 'featured' },
-    prepare({ title, media, featured }: { title: string; media: unknown; featured: boolean }) {
-      return { title: featured ? `★ ${title}` : title, media };
-    },
+    prepare: (selection: Record<string, any>) => ({
+      title: selection.featured ? `★ ${selection.title}` : selection.title,
+      media: selection.media,
+    }),
   },
 });

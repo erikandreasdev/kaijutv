@@ -35,11 +35,23 @@ npx wrangler deploy    # uploads dist/ to Cloudflare Workers
 
 Wrangler does not automatically read `.env` for builds — set these in the Cloudflare Dashboard under **Workers & Pages → kaijutv → Settings → Variables and Secrets**, or pass them manually at build time:
 
-| Variable | Value |
-|----------|-------|
-| `PUBLIC_SANITY_PROJECT_ID` | Your Sanity project ID |
-| `PUBLIC_SANITY_DATASET` | `production` |
-| `SANITY_API_TOKEN` | Your Sanity read token (build time only) |
+| Variable | Required | Value |
+|----------|----------|-------|
+| `PUBLIC_SANITY_PROJECT_ID` | yes | Your Sanity project ID |
+| `PUBLIC_SANITY_DATASET` | yes | `production` |
+| `SANITY_API_TOKEN` | yes | Your Sanity read token (build time only) |
+| `PUBLIC_SITE_URL` | no | Canonical origin — canonical tags, Open Graph, sitemap. Defaults to `https://kaiju-tv.com` |
+| `PUBLIC_CONTACT_ENDPOINT` | no | Form backend the contact form POSTs to (see *Contact form* below) |
+| `PUBLIC_CONTACT_ACCESS_KEY` | no | Public access key for that backend (Web3Forms) |
+| `PUBLIC_TURNSTILE_SITE_KEY` | no | Cloudflare Turnstile site key |
+
+### Automatic deploys (GitHub Actions)
+
+`.github/workflows/deploy.yml` builds and publishes on every push to `main`, and can
+be run manually from the Actions tab. Add under **Settings → Secrets and variables → Actions**:
+
+- **Secrets:** `CLOUDFLARE_API_TOKEN` (permission: *Edit Cloudflare Workers*), `CLOUDFLARE_ACCOUNT_ID`, `PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`
+- **Variables** (optional): `PUBLIC_SANITY_DATASET`, `PUBLIC_SITE_URL`, `PUBLIC_CONTACT_ENDPOINT`, `PUBLIC_CONTACT_ACCESS_KEY`, `PUBLIC_TURNSTILE_SITE_KEY`
 
 ### Custom domain
 
@@ -112,7 +124,8 @@ Accessed in Studio as **Ajustes del Sitio**. There is always exactly one documen
 | `aboutBio` | Biography text on the Sobre Mí page (separate paragraphs with a blank line) |
 | `aboutPhoto` | Profile photo (hotspot-enabled) |
 | `aboutStats` | Array of `{ value, label }` — the 3 metrics (years, clients, projects) |
-| `email` | Contact email shown in footer and nav |
+| `email` | Contact email. Never rendered in plain text — the site obfuscates it against spam harvesters |
+| `ogImage` | Image shown when the site is shared on WhatsApp/LinkedIn/X (1200×630 px) |
 | `socialLinks` | Array of `{ platform, url }` — vimeo, instagram, behance, facebook |
 
 #### `project`
@@ -124,11 +137,24 @@ Portfolio items shown on `/portfolio` and the homepage grid.
 | `title` | Project name |
 | `slug` | URL slug — **must match** one of the 47 slugs from the original sitemap for URL continuity |
 | `category` | Dropdown: motion-graphics, branding, explainer-video, contenido-rrss, publicidad-online, broadcast-design, brand-video, otro |
-| `thumbnail` | GIF or image used in the portfolio grid. **Do not apply width transforms on GIFs** (breaks animation) |
+| `tags` | References to **Etiqueta** documents (dirección de arte, motion graphics, ilustración…). Drive the portfolio filter |
+| `body` | **Descripción** — rich text: bold, italic, underline, strike, links, lists, small headings, quotes |
+| `description` | Deprecated plain-text field. Only visible on documents that still hold old copy; move it to `body` and clear it, and it disappears |
+| `thumbnail` | GIF or image used in the portfolio grid (+ optional `alt`) |
 | `vimeoUrl` | Full Vimeo URL — the app extracts the numeric ID automatically |
-| `description` | Project description shown on the project detail page |
+| `gallery` | Images and Vimeo videos. Each image takes `alt`, `caption` and `wide` (full-row) |
 | `featured` | Boolean — if true, project appears on the homepage grid |
 | `order` | Number — lower = appears first in the homepage featured grid |
+
+#### `tag` (Etiqueta)
+
+Disciplines used to filter the portfolio. Create as many as you need.
+
+| Field | Description |
+|-------|-------------|
+| `title` | Ej: Dirección de arte, Motion graphics, Ilustración, 3D |
+| `slug` | Used in the `/portfolio?tag=…` filter URL — press *Generate* |
+| `order` | Position in the filter row (lower = first) |
 
 #### `service`
 
@@ -155,7 +181,23 @@ Studio → Ajustes del Sitio → edit `aboutBio` (blank line between paragraphs)
 Studio → Ajustes del Sitio → `aboutStats` array → edit each `value` and `label` → Publish
 
 **Add a new portfolio project:**
-Studio → Proyecto → New → fill title, slug, category, thumbnail, vimeoUrl, description → set `featured` and `order` if it should appear on homepage → Publish
+Studio → Proyecto → New → fill title, slug, category, tags, thumbnail, vimeoUrl, descripción → set `featured` and `order` if it should appear on homepage → Publish
+
+**Upload gallery images (no external hosting needed):**
+Open the project → **Galería** tab → drag a whole folder of images onto the gallery field, or
+*Add item → Image* and multi-select files in the picker. They upload straight to Sanity's CDN —
+imgbb or any other intermediate host is no longer involved. Reorder by dragging, add `alt`/`caption`
+per image, and tick **Ocupar todo el ancho** for the ones that should span the full row.
+The **Media** tab in the Studio's top bar is a full asset library: bulk upload once, reuse anywhere.
+
+**Create a new discipline tag:**
+Studio → Etiquetas → New → título + *Generate* slug + orden → Publish. It then appears in the
+project's *Etiquetas* field and in the `/portfolio` filter as soon as a project uses it.
+
+**Write a formatted description:**
+Open the project → **Descripción** → use the toolbar for bold, italic, underline, lists, quotes and
+links. Old projects show a read-only *Descripción (formato antiguo)* box — paste that text into the
+new field, clear the old one, and it disappears for good.
 
 **Change which projects appear on the homepage:**
 Studio → Proyecto → open a project → toggle `featured` on/off, adjust `order` → Publish
@@ -199,3 +241,55 @@ npx sanity@latest dataset export production ./backup.tar.gz   # export full data
 npx sanity@latest dataset import ./backup.tar.gz production   # restore from backup
 npx sanity@latest documents query '*[_type == "project"]'     # GROQ query via CLI
 ```
+
+---
+
+## Part 3 — Contact form & anti-spam
+
+The homepage contact section (`/#contacto`) is a real form with layered spam protection. It works
+out of the box with **no configuration**, and gets stronger as you configure it.
+
+### Protection that is always on
+
+| Layer | What it does |
+|-------|--------------|
+| Email obfuscation | The address never appears in the HTML in machine-readable form. Harvester bots that crawl the page find nothing to scrape — this alone kills most of the incoming spam, since the old site exposed `mailto:info@kaiju-tv.com` on every page. |
+| Honeypot field | An invisible field only bots fill in. If it has a value the form reports success and sends nothing. |
+| Time trap | Submissions faster than 4 s are held back until the window elapses. Scripts do not wait; people are never blocked. |
+| Maths challenge | A small sum, generated in the browser so it is not sitting in the static HTML for a crawler to pre-solve. |
+
+### Level 1 — no backend (current default)
+
+With `PUBLIC_CONTACT_ENDPOINT` empty, a valid submission opens the visitor's mail client with
+name, email and message already filled in. Nothing to set up, nothing to pay for.
+
+### Level 2 — a form backend (recommended)
+
+Messages then arrive in the inbox directly, and the sender's address never leaves the browser as a
+`mailto:`.
+
+**Web3Forms** (free tier, no account needed):
+
+1. Go to <https://web3forms.com> → enter the destination email → copy the access key.
+2. Set the build-time variables:
+   ```
+   PUBLIC_CONTACT_ENDPOINT=https://api.web3forms.com/submit
+   PUBLIC_CONTACT_ACCESS_KEY=<your access key>
+   ```
+
+**Formspree** works the same way — set `PUBLIC_CONTACT_ENDPOINT=https://formspree.io/f/xxxxxxx`
+and leave the access key empty.
+
+### Level 3 — Cloudflare Turnstile (strongest)
+
+A real bot-detection challenge, free and privacy-friendly. It replaces the maths question.
+
+1. **dash.cloudflare.com → Turnstile → Add site** → enter the domain → copy the **site key**.
+2. Set `PUBLIC_TURNSTILE_SITE_KEY=<site key>` and rebuild.
+3. In the form backend, enable Turnstile verification and paste the **secret key** there
+   (Web3Forms and Formspree both verify the `cf-turnstile-response` token server-side).
+
+Without step 3 the widget is decorative — the token has to be checked by whoever receives the
+message.
+
+Remember: all four variables are **build-time**. After changing any of them, rebuild and redeploy.

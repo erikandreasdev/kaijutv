@@ -1,0 +1,106 @@
+---
+import type { Tag } from '../lib/sanity';
+
+interface Props {
+  tags: Tag[];
+}
+
+const { tags } = Astro.props;
+---
+
+{tags.length > 0 && (
+  <div class="mb-10">
+    <ul class="flex flex-wrap justify-center gap-2 list-none p-0" role="list" aria-label="Filtrar por disciplina">
+      <li>
+        <button type="button" class="tag-chip is-active" data-tag-filter="" aria-pressed="true">
+          Todo
+        </button>
+      </li>
+      {tags.map((tag) => (
+        <li>
+          <button type="button" class="tag-chip" data-tag-filter={tag.slug} aria-pressed="false">
+            {tag.title}
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <p id="filter-empty" class="hidden text-center font-body text-sm text-kaiju-dim-grey mt-10">
+      No hay proyectos con esta etiqueta todavía.
+    </p>
+  </div>
+)}
+
+<style>
+  .tag-chip {
+    font-family: Raleway, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #a0a3a2;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 0.55rem 1rem;
+    cursor: pointer;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .tag-chip:hover {
+    color: #fff;
+    border-color: #e63838;
+  }
+
+  .tag-chip:focus-visible {
+    outline: 2px solid #e63838;
+    outline-offset: 2px;
+  }
+
+  .tag-chip.is-active {
+    color: #fff;
+    background: #e63838;
+    border-color: #e63838;
+  }
+</style>
+
+<script>
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-tag-filter]'));
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('[data-project-card]'));
+  const empty = document.getElementById('filter-empty');
+
+  if (chips.length && cards.length) {
+    function apply(active: string, pushState: boolean) {
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const tags = (card.dataset.tags ?? '').split(' ').filter(Boolean);
+        const show = !active || tags.includes(active);
+        card.classList.toggle('hidden', !show);
+        if (show) visible += 1;
+      });
+
+      chips.forEach((chip) => {
+        const isActive = (chip.dataset.tagFilter ?? '') === active;
+        chip.classList.toggle('is-active', isActive);
+        chip.setAttribute('aria-pressed', String(isActive));
+      });
+
+      empty?.classList.toggle('hidden', visible > 0);
+
+      if (pushState) {
+        const url = new URL(window.location.href);
+        if (active) url.searchParams.set('tag', active);
+        else url.searchParams.delete('tag');
+        window.history.replaceState({}, '', url);
+      }
+    }
+
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => apply(chip.dataset.tagFilter ?? '', true));
+    });
+
+    // Deep links such as /portfolio?tag=ilustracion land pre-filtered.
+    const initial = new URL(window.location.href).searchParams.get('tag') ?? '';
+    if (initial && chips.some((chip) => chip.dataset.tagFilter === initial)) apply(initial, false);
+  }
+</script>

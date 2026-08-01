@@ -1,0 +1,159 @@
+---
+import { toHTML } from '@portabletext/to-html';
+import type { PortableTextBlock } from '@portabletext/types';
+
+interface Props {
+  value?: PortableTextBlock[];
+  /** Plain-text fallback for documents not yet migrated to rich text. */
+  fallback?: string;
+  class?: string;
+}
+
+const { value, fallback, class: className = '' } = Astro.props;
+
+function escapeHtml(text: string) {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+let html = '';
+
+if (value?.length) {
+  html = toHTML(value, {
+    components: {
+      block: {
+        normal: ({ children }) => `<p>${children}</p>`,
+        h3: ({ children }) => `<h3>${children}</h3>`,
+        h4: ({ children }) => `<h4>${children}</h4>`,
+        blockquote: ({ children }) => `<blockquote>${children}</blockquote>`,
+      },
+      marks: {
+        underline: ({ children }) => `<u>${children}</u>`,
+        'strike-through': ({ children }) => `<s>${children}</s>`,
+        code: ({ children }) => `<code>${children}</code>`,
+        link: ({ children, value: mark }) => {
+          const href = escapeHtml(String(mark?.href ?? '#'));
+          const blank = mark?.blank !== false;
+          const attrs = blank ? ' target="_blank" rel="noopener noreferrer"' : '';
+          return `<a href="${href}"${attrs}>${children}</a>`;
+        },
+      },
+    },
+  });
+} else if (fallback) {
+  html = fallback
+    .split(/\n{2,}|\n/)
+    .map((para) => para.trim())
+    .filter(Boolean)
+    .map((para) => `<p>${escapeHtml(para)}</p>`)
+    .join('');
+}
+---
+
+{html && <div class:list={['rich-text', className]} set:html={html} />}
+
+<style is:global>
+  .rich-text {
+    font-family: Raleway, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    color: #a0a3a2;
+  }
+
+  .rich-text > * + * {
+    margin-top: 1em;
+  }
+
+  .rich-text p {
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
+  }
+
+  .rich-text strong {
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .rich-text em {
+    font-style: italic;
+  }
+
+  .rich-text u {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .rich-text s {
+    text-decoration: line-through;
+  }
+
+  .rich-text code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.15em 0.4em;
+  }
+
+  .rich-text h3,
+  .rich-text h4 {
+    font-family: Raleway, sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+
+  .rich-text h3 {
+    font-size: 18px;
+    margin-top: 1.6em;
+  }
+
+  .rich-text h4 {
+    font-size: 15px;
+    margin-top: 1.4em;
+  }
+
+  .rich-text a {
+    color: #ff3838;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  .rich-text a:hover {
+    color: #ffffff;
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    padding-left: 1.25em;
+  }
+
+  .rich-text ul {
+    list-style: disc;
+  }
+
+  .rich-text ol {
+    list-style: decimal;
+  }
+
+  .rich-text li + li {
+    margin-top: 0.4em;
+  }
+
+  .rich-text li::marker {
+    color: #ff3838;
+  }
+
+  .rich-text blockquote {
+    border-left: 3px solid #e63838;
+    padding-left: 1em;
+    font-style: italic;
+    color: #c9cccb;
+  }
+</style>

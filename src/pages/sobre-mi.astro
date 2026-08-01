@@ -25,9 +25,14 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
   <!-- Bio section -->
   <section class="shadow-inset-top bg-kaiju-bg py-16 px-6">
     <div class="max-w-[940px] mx-auto">
-      <h2 class="font-heading text-3xl uppercase text-center mb-10">
+      <h2 class="font-heading text-3xl uppercase text-center mb-4">
         ¿NOS CONOCEMOS?
       </h2>
+      {intro && (
+        <p class="font-body text-center text-kaiju-grey-body max-w-xl mx-auto mb-10">
+          {intro}
+        </p>
+      )}
 
       <div class="grid md:grid-cols-2 gap-12 items-center">
         <!-- Photo: left on desktop, top on mobile -->
@@ -37,6 +42,10 @@ const photoUrl = settings?.aboutPhoto ? urlFor(settings.aboutPhoto).width(600).u
               src={photoUrl}
               alt="Saúl Peña - Kaiju TV"
               class="w-full max-w-sm object-cover"
+              width="600"
+              height="750"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             <div class="w-full max-w-sm aspect-[3/4] bg-kaiju-dark flex items-center justify-center">

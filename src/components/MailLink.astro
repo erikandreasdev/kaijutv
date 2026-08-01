@@ -1,0 +1,40 @@
+---
+import { encodeEmail, humanizeEmail } from '../lib/email';
+
+interface Props {
+  email: string;
+  class?: string;
+  /** Optional label; when omitted the (obfuscated) address itself is shown. */
+  label?: string;
+  subject?: string;
+}
+
+const { email, class: className = '', label, subject } = Astro.props;
+---
+
+<a
+  href="#contacto"
+  class:list={['mail-link', className]}
+  data-mail={encodeEmail(email)}
+  data-mail-subject={subject}
+  data-mail-keep-label={label ? 'true' : undefined}
+>
+  {label ?? humanizeEmail(email)}
+</a>
+
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('a.mail-link[data-mail]').forEach((link) => {
+    let address: string;
+    try {
+      address = atob(link.dataset.mail ?? '');
+    } catch {
+      return;
+    }
+    if (!address) return;
+
+    const subject = link.dataset.mailSubject;
+    link.href = `mailto:${address}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`;
+    if (link.dataset.mailKeepLabel !== 'true') link.textContent = address;
+    link.removeAttribute('data-mail');
+  });
+</script>

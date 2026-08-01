@@ -1,0 +1,171 @@
+---
+import type { GalleryItem, SanityImage } from '../lib/sanity';
+import { extractVimeoId, imageFullSrc, imageSrc } from '../lib/sanity';
+
+interface Props {
+  items: GalleryItem[];
+  projectTitle: string;
+}
+
+const { items, projectTitle } = Astro.props;
+
+const entries = items.map((item) => {
+  if (item._type === 'vimeoItem') {
+    return { kind: 'video' as const, key: item._key, vimeoId: extractVimeoId(item.vimeoUrl) };
+  }
+
+  const image = item as SanityImage;
+  return {
+    kind: 'image' as const,
+    key: image._key,
+    thumb: imageSrc(image, 1200),
+    full: imageFullSrc(image),
+    alt: image.alt || projectTitle,
+    caption: image.caption ?? '',
+    wide: image.wide === true,
+    width: image.dimensions?.width,
+    height: image.dimensions?.height,
+    lqip: image.lqip ?? undefined,
+  };
+});
+---
+
+<div class="project-gallery">
+  {entries.map((entry) =>
+    entry.kind === 'video' ? (
+      entry.vimeoId && (
+        <div class="gallery-cell is-wide">
+          <div class="relative w-full" style="padding-top: 56.25%">
+            <iframe
+              class="absolute inset-0 w-full h-full"
+              src={`https://player.vimeo.com/video/${entry.vimeoId}?color=e63838&title=0&byline=0&portrait=0&dnt=1`}
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowfullscreen
+              loading="lazy"
+              title={`${projectTitle} — vídeo`}
+            />
+          </div>
+        </div>
+      )
+    ) : (
+      <figure class:list={['gallery-cell', entry.wide && 'is-wide']}>
+        <a
+          href={entry.full}
+          data-lightbox
+          data-lb-alt={entry.alt}
+          data-lb-caption={entry.caption}
+          class="gallery-link"
+          aria-label={`Ampliar imagen: ${entry.alt}`}
+        >
+          <img
+            src={entry.thumb}
+            alt={entry.alt}
+            width={entry.width}
+            height={entry.height}
+            loading="lazy"
+            decoding="async"
+            style={entry.lqip ? `background-image:url(${entry.lqip});background-size:cover;` : undefined}
+          />
+          <span class="gallery-zoom" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="20" height="20">
+              <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2" />
+              <path d="M16 16l5 5M11 8v6M8 11h6" stroke="currentColor" stroke-width="2" fill="none" />
+            </svg>
+          </span>
+        </a>
+        {entry.caption && <figcaption>{entry.caption}</figcaption>}
+      </figure>
+    )
+  )}
+</div>
+
+<style>
+  .project-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .project-gallery {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .gallery-cell.is-wide {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .gallery-cell {
+    margin: 0;
+    min-width: 0;
+  }
+
+  .gallery-link {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    background: #1a1a1a;
+    cursor: zoom-in;
+  }
+
+  .gallery-link img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease, opacity 0.3s ease;
+  }
+
+  .gallery-link:hover img,
+  .gallery-link:focus-visible img {
+    transform: scale(1.03);
+    opacity: 0.85;
+  }
+
+  .gallery-link:focus-visible {
+    outline: 2px solid #e63838;
+    outline-offset: 2px;
+  }
+
+  .gallery-zoom {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+
+  .gallery-link:hover .gallery-zoom,
+  .gallery-link:focus-visible .gallery-zoom {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  figcaption {
+    font-family: Raleway, sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    color: #6e7373;
+    margin-top: 0.5rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-link img,
+    .gallery-zoom {
+      transition: none;
+    }
+    .gallery-link:hover img,
+    .gallery-link:focus-visible img {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getSiteSettings } from '../lib/sanity';
+
+const settings = await getSiteSettings();
+---
+
+<BaseLayout
+  title="Página no encontrada — Kaiju TV"
+  description="La página que buscas no existe o ha cambiado de sitio."
+  settings={settings}
+  noindex
+>
+  <section class="shadow-inset-top bg-kaiju-bg px-6 py-28">
+    <div class="max-w-[940px] mx-auto text-center">
+      <p class="font-heading font-black text-kaiju-red-title" style="font-size: clamp(4rem, 14vw, 8rem); line-height: 1;">
+        404
+      </p>
+      <h1 class="font-heading uppercase text-white text-2xl mt-4 mb-4" style="font-weight: 900;">
+        Aquí no hay nada que ver
+      </h1>
+      <p class="font-body text-kaiju-grey-body max-w-md mx-auto mb-10">
+        La página que buscas no existe o ha cambiado de dirección. Prueba con el portfolio.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a
+          href="/portfolio"
+          class="inline-block bg-kaiju-red text-white font-heading font-extrabold uppercase tracking-widest px-8 py-3 hover:bg-kaiju-red-hover transition-colors text-sm"
+        >
+          VER PORTFOLIO
+        </a>
+        <a
+          href="/"
+          class="inline-block border border-white/30 text-white font-heading font-extrabold uppercase tracking-widest px-8 py-3 hover:bg-white hover:text-kaiju-bg transition-colors text-sm"
+        >
+          IR AL INICIO
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

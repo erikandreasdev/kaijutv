@@ -1,4 +1,11 @@
 ---
+import MailLink from './MailLink.astro';
+
+interface Props {
+  email?: string;
+}
+
+const { email = 'info@kaiju-tv.com' } = Astro.props;
 const pathname = Astro.url.pathname;
 
 const links = [
@@ -13,7 +20,10 @@ function isActive(href: string) {
 }
 ---
 
-<nav class="relative bg-white px-6 py-5 flex items-center justify-center sticky top-0 z-50">
+<nav
+  class="relative bg-white px-6 py-5 flex items-center justify-center sticky top-0 z-50"
+  aria-label="Navegación principal"
+>
   <!-- Desktop: links centered -->
   <ul class="hidden md:flex items-center gap-6">
     {links.map(({ href, label }) => (
@@ -32,19 +42,19 @@ function isActive(href: string) {
     ))}
   </ul>
 
-  <!-- Email pinned to the right -->
-  <a
-    href="mailto:info@kaiju-tv.com"
+  <!-- Email pinned to the right (obfuscated against harvesters) -->
+  <MailLink
+    email={email}
     class="hidden lg:block absolute right-[80px] text-xs text-kaiju-red hover:text-kaiju-red-hover transition-colors font-body"
-  >
-    info@kaiju-tv.com
-  </a>
+  />
 
   <!-- Mobile hamburger pinned to the right -->
   <button
     id="mobile-menu-toggle"
     class="md:hidden absolute right-6 flex flex-col gap-1.5 p-2"
     aria-label="Abrir menú"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
   >
     <span class="block w-6 h-0.5 bg-gray-500"></span>
     <span class="block w-6 h-0.5 bg-gray-500"></span>
@@ -53,10 +63,7 @@ function isActive(href: string) {
 </nav>
 
 <!-- Mobile menu -->
-<div
-  id="mobile-menu"
-  class="hidden md:hidden bg-white px-6 py-4 sticky top-[68px] z-40"
->
+<div id="mobile-menu" class="hidden md:hidden bg-white px-6 py-4 sticky top-[68px] z-40">
   <ul class="flex flex-col gap-4 text-center">
     {links.map(({ href, label }) => (
       <li>
@@ -64,15 +71,14 @@ function isActive(href: string) {
           href={href}
           class={`font-body text-sm ${isActive(href) ? 'text-kaiju-red' : 'text-gray-500'}`}
           style="letter-spacing:0.03em;"
+          aria-current={isActive(href) ? 'page' : undefined}
         >
           {label}
         </a>
       </li>
     ))}
     <li>
-      <a href="mailto:info@kaiju-tv.com" class="font-body text-xs text-gray-400">
-        info@kaiju-tv.com
-      </a>
+      <MailLink email={email} class="font-body text-xs text-gray-400" />
     </li>
   </ul>
 </div>
@@ -81,6 +87,8 @@ function isActive(href: string) {
   const toggle = document.getElementById('mobile-menu-toggle');
   const menu = document.getElementById('mobile-menu');
   toggle?.addEventListener('click', () => {
-    menu?.classList.toggle('hidden');
+    const open = menu?.classList.toggle('hidden') === false;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
   });
 </script>

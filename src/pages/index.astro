@@ -3,9 +3,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HeroSection from '../components/HeroSection.astro';
 import ReelSection from '../components/ReelSection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
-import EbookCTA from '../components/EbookCTA.astro';
 import PortfolioGrid from '../components/PortfolioGrid.astro';
-import ContactCTA from '../components/ContactCTA.astro';
+import ContactSection from '../components/ContactSection.astro';
 import { getSiteSettings, getHomeProjects, getServices } from '../lib/sanity';
 
 const [settings, featuredProjects, services] = await Promise.all([
@@ -26,8 +25,6 @@ const email = settings?.email ?? 'info@kaiju-tv.com';
   <ReelSection vimeoId={settings?.reelVimeoId ?? '383493000'} />
 
   <ServicesSection services={services} />
-
-  <EbookCTA />
 
   <section class="bg-kaiju-bg py-16 px-6">
     <div class="max-w-[940px] mx-auto">
@@ -71,5 +68,5 @@ const email = settings?.email ?? 'info@kaiju-tv.com';
     </div>
   </section>
 
-  <ContactCTA email={email} />
+  <ContactSection email={email} />
 </BaseLayout>

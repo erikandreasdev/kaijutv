@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PortfolioGrid from '../components/PortfolioGrid.astro';
-import { getSiteSettings, getAllProjects } from '../lib/sanity';
+import TagFilter from '../components/TagFilter.astro';
+import { getSiteSettings, getAllProjects, getUsedTags } from '../lib/sanity';
 
-const [settings, projects] = await Promise.all([
+const [settings, projects, tags] = await Promise.all([
   getSiteSettings(),
   getAllProjects(),
+  getUsedTags(),
 ]);
 ---
 
@@ -16,9 +18,19 @@ const [settings, projects] = await Promise.all([
 >
   <section class="shadow-inset-top bg-kaiju-bg py-16 px-6">
     <div class="max-w-[940px] mx-auto">
-      <h1 class="uppercase text-center mb-10" style="font-family: Raleway, sans-serif; font-size: 26px; font-weight: 900; line-height: 26px; color: #ff3838;">
+      <h1
+        class="uppercase text-center mb-4"
+        style="font-family: Raleway, sans-serif; font-size: 26px; font-weight: 900; line-height: 26px; color: #ff3838;"
+      >
         PORTFOLIO
       </h1>
+      <p class="font-body text-sm text-center text-kaiju-dim-grey mb-10">
+        {projects.length > 0
+          ? `${projects.length} proyectos de animación, diseño y dirección de arte.`
+          : 'Proyectos de animación, diseño y dirección de arte.'}
+      </p>
+
+      <TagFilter tags={tags} />
 
       {projects.length > 0 ? (
         <PortfolioGrid projects={projects} />

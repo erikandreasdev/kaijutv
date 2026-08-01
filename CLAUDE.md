@@ -8,46 +8,60 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 npm run dev       # dev server at localhost:4321 (Studio at /studio)
 npm run build     # static build to dist/
 npm run preview   # serve dist/ locally
-npx astro check   # TypeScript type-check all .astro files
+npm run check     # astro check — TypeScript type-check all .astro files (must stay at 0 errors)
 ```
 
-Requires `.env` with `PUBLIC_SANITY_PROJECT_ID`, `PUBLIC_SANITY_DATASET`, and `SANITY_API_TOKEN` — copy from `.env.example`. Without credentials, pages build but render with fallback/empty content.
+Requires `.env` with `PUBLIC_SANITY_PROJECT_ID`, `PUBLIC_SANITY_DATASET`, and `SANITY_API_TOKEN` — copy from `.env.example`. Without credentials, pages build but render with fallback/empty content. All other variables in `.env.example` are optional.
 
 ## Architecture
 
 **Astro 6 static site** (`output: 'static'`) backed by **Sanity v5** as the CMS. The Sanity Studio is embedded at `/studio` via the `@sanity/astro` integration. Tailwind v4 is wired as a Vite plugin (`@tailwindcss/vite`) — there is no `tailwind.config.*` file; theme tokens live in `src/styles/global.css` under `@theme`.
 
+`site` in `astro.config.mjs` comes from `PUBLIC_SITE_URL` (default `https://kaiju-tv.com`) and drives canonical URLs, Open Graph tags and `@astrojs/sitemap`.
+
 ### Data flow
 
 All Sanity fetching goes through `src/lib/sanity.ts`, which exports:
 - `sanityClient` — the configured `@sanity/client` instance
-- `urlFor(source)` — image URL builder (use without `.width()` transforms on GIF thumbnails to preserve animation)
-- Typed GROQ helpers: `getSiteSettings`, `getAllProjects`, `getFeaturedProjects`, `getProjectBySlug`, `getAllProjectSlugs`, `getServices`
+- `urlFor(source)` — raw image URL builder
+- `imageSrc(image, width)` / `imageFullSrc(image)` — **prefer these over `urlFor`**; they skip every transform for animated GIFs (`isAnimated()` checks the asset ref suffix), which would otherwise flatten them to a still frame
+- Typed GROQ helpers: `getSiteSettings`, `getAllProjects`, `getFeaturedProjects`, `getHomeProjects`, `getProjectBySlug`, `getAllProjectSlugs`, `getServices`, `getUsedTags`
 - `extractVimeoId(url)` — pulls the numeric ID from a Vimeo URL
+- `toPlainText(blocks)` — flattens Portable Text for meta descriptions
 
-All helpers are wrapped in `safeFetch()`, which silently returns `null`/`[]` when `PUBLIC_SANITY_PROJECT_ID` is absent, so the build never fails without credentials.
+Project queries share the `PROJECT_FIELDS` projection, which dereferences `tags[]->` and flattens `dimensions` + `lqip` next to each image (the `asset` reference is left intact so `urlFor` still works).
+
+All helpers are wrapped in `safeFetch()`, which returns `null`/`[]` when `PUBLIC_SANITY_PROJECT_ID` is absent or a query fails, so the build never breaks without credentials.
 
 ### Sanity schemas (`src/sanity/schemas/`)
 
 | Schema | Notes |
 |--------|-------|
-| `project` | Portfolio items. `slug.current` must match the 47 slugs from the original sitemap (see `webflow-website-backup/WEBSITE_CONTEXT.md`) for URL continuity. `featured: true` + `order` controls the 12 homepage picks. |
-| `siteSettings` | Singleton document (always `documentId: 'siteSettings'`). Controls hero text, reel Vimeo ID, about bio/photo/stats, email, social links. |
+| `project` | Portfolio items, grouped into Contenido / Galería / Ajustes tabs. `slug.current` must match the 47 slugs from the original sitemap (see `webflow-website-backup/WEBSITE_CONTEXT.md`) for URL continuity. `featured: true` + `order` controls the 12 homepage picks. |
+| `tag` | Free-form disciplines (dirección de arte, motion graphics, ilustración…). Referenced from `project.tags`; drives the `/portfolio` filter. |
+| `blockContent` | Shared Portable Text type: bold, italic, underline, strike, code, links, lists, `h3`/`h4`, blockquote. |
+| `siteSettings` | Singleton document (always `documentId: 'siteSettings'`). Hero text, reel Vimeo ID, about intro/bio/photo/stats, email, `ogImage`, social links. |
 | `service` | The three service cards (Explainer, RRSS, Publicidad online). Ordered by `order` field. |
 
-`sanity.config.ts` (root-level) configures the embedded Studio: the desk structure shows `siteSettings` as a singleton (single-document link, not a list), and lists `project` and `service` document types.
+Sanity `preview.prepare` callbacks must be typed `(selection: Record<string, any>)` — narrower parameter types fail `astro check` against Sanity's `PreviewConfig`.
+
+`project.description` (plain text) is **deprecated but not deleted**: it is `readOnly` and `hidden` unless the document still has a value, so pre-migration copy can be moved into `body` without data loss. Render paths pass it to `RichText` as `fallback`.
+
+`sanity.config.ts` (root-level) configures the embedded Studio: the desk structure shows `siteSettings` as a singleton, then lists `project`, `tag` and `service`. `sanity-plugin-media` adds a media library for bulk upload and asset reuse — images are uploaded straight to Sanity, never to a third-party host.
 
 ### Pages and routing
 
 | Route | File | Data fetched |
 |-------|------|-------------|
-| `/` | `pages/index.astro` | `getSiteSettings` + `getFeaturedProjects` + `getServices` |
-| `/portfolio` | `pages/portfolio.astro` | `getAllProjects` |
+| `/` | `pages/index.astro` | `getSiteSettings` + `getHomeProjects` + `getServices` |
+| `/portfolio` | `pages/portfolio.astro` | `getAllProjects` + `getUsedTags` |
 | `/sobre-mi` | `pages/sobre-mi.astro` | `getSiteSettings` |
-| `/proyectos/[slug]` | `pages/proyectos/[slug].astro` | `getAllProjectSlugs` (via `getStaticPaths`) + `getProjectBySlug` |
-| `/video-marketing` | `pages/video-marketing.astro` | `getSiteSettings` (placeholder page) |
+| `/proyectos/[slug]` | `pages/proyectos/[slug].astro` | `getAllProjects` + `getSiteSettings` in `getStaticPaths`, passed down as props (one query for every project page, and supplies the prev/next neighbours) |
 | `/aviso-legal` | `pages/aviso-legal.astro` | `getSiteSettings` (content hardcoded) |
+| `/404` | `pages/404.astro` | `getSiteSettings` |
 | `/studio` | auto-generated by `@sanity/astro` | — |
+
+`/video-marketing` (the retired ebook landing) is a config-level redirect to `/` in `astro.config.mjs`.
 
 ### Design system
 
@@ -61,22 +75,42 @@ Custom tokens defined in `src/styles/global.css` under `@theme`:
 | `kaiju-red-hover` | #bf3535 | Red button hover state |
 | `kaiju-red-title` | #ff3838 | Heading/title text on dark backgrounds |
 | `kaiju-grey-body` | #a0a3a2 | Paragraph body text |
-| `kaiju-gris-medio` | #424545 | Stats and ebook section background |
+| `kaiju-gris-medio` | #424545 | Stats section background |
 | `kaiju-dim-grey` | #6e7373 | Nav underline, secondary text |
 
 - **Fonts**: both `font-heading` and `font-body` map to Raleway (sans-serif). Changa One is loaded via Google Fonts but not used in CSS tokens. Google Fonts link is in `BaseLayout.astro`.
 - **Utilities**:
   - `animate-float` — gentle 3s vertical float, used on the hero image
   - `shadow-inset-top` — `inset 0 28px 40px -18px rgba(0,0,0,0.45)`, applied at every section color-change boundary (white→dark, dark→red). Do NOT apply on grey→grey or red→red transitions.
+- Global `prefers-reduced-motion` block neutralises animations and transitions; components with custom motion also guard their own rules.
 
-Section rhythm on the homepage: white hero → dark reel → dark services → grey ebook CTA → dark portfolio grid → red contact CTA → red footer.
+Section rhythm on the homepage: white hero → dark reel → dark services → dark portfolio grid → red contact form → red footer.
 
 ### Key conventions
 
-- `BaseLayout.astro` accepts a `settings` prop (`SiteSettings | null`) passed through to `Footer.astro` for social links and email. Pages that fetch settings should pass it down; pages that don't can omit it (footer falls back to hardcoded defaults).
+- `BaseLayout.astro` accepts a `settings` prop (`SiteSettings | null`) passed through to `Nav.astro` and `Footer.astro`. Pages that fetch settings should pass it down; pages that don't can omit it (footer falls back to hardcoded defaults). It also renders `SEO.astro` (canonical, OG/Twitter, theme-color), a skip link and `ProfessionalService` JSON-LD.
+- `ProjectLayout.astro` is the chrome-free variant used by project detail pages; it takes an optional `jsonLd` object.
 - `BaseLayout.astro` renders the Kaiju animated GIF (`/kaiju-logo-loop.gif`) centered in a white section above `<main>` on every page.
 - Buttons are square-cornered (`rounded` is not used), uppercase, `font-heading`, red primary / white ghost.
 - All `.astro` component props are typed with a local `interface Props` block.
 - `h2` global style: Raleway 900, 26px, `#ff3838` on dark backgrounds. Overridden to `#a0a3a2` inside `.bg-white` and `#ffffff` inside `.bg-kaiju-red` via global CSS rules.
 - `StatCounter.astro` numbers use inline `style` (Raleway 700 70px `#ffffff`) rather than Tailwind classes to guarantee exact rendering.
 - `Footer.astro` contains the "Made with ♥ by Erik Andreas" attribution badge with a CSS `heartbeat` animation on hover (defined in a `<style>` block inside the component).
+
+### Email obfuscation — do not regress
+
+**No page may render the contact address in a machine-readable form.** `src/lib/email.ts` base64-encodes it; `MailLink.astro` ships the payload in `data-mail` and only client JS turns it into a `mailto:`. Visitors without JS see `info (at) kaiju-tv (dot) com`. Never write a literal `mailto:` into markup — use `<MailLink email={…} />` (Nav, Footer, aviso-legal and the contact section all do).
+
+### Contact form (`ContactSection.astro`)
+
+Layered anti-spam, all client-side because the site is static:
+
+1. **Honeypot** `website` field, positioned off-screen (not `display:none`). If filled, the form fakes a success and sends nothing.
+2. **Time trap** — submissions faster than 4 s are *delayed* until the window elapses rather than rejected, so a fast human or an autofill is never punished.
+3. **Challenge** — a random arithmetic question generated in the browser, so it is not in the static HTML for a crawler to pre-solve. Replaced by a **Cloudflare Turnstile** widget when `PUBLIC_TURNSTILE_SITE_KEY` is set (the token is sent as `cf-turnstile-response`, which Web3Forms and Formspree both verify server-side).
+
+Delivery: POSTs JSON to `PUBLIC_CONTACT_ENDPOINT` (adding `access_key` from `PUBLIC_CONTACT_ACCESS_KEY` when present). With no endpoint configured it falls back to opening the visitor's mail client with everything pre-filled, decoding the address from the form's `data-mail`.
+
+### Gallery and lightbox
+
+`ProjectGallery.astro` renders a two-column grid (images marked `wide`, and every Vimeo item, span the full row) of `<a data-lightbox>` triggers. `Lightbox.astro` is included **once per page** and wires itself to every trigger in DOM order — it is a native `<dialog>` (free focus trap, Esc, inert background) with arrow-key navigation, neighbour preloading, touch swipe and a counter. Adding a second `<Lightbox />` to a page would double-bind the triggers.

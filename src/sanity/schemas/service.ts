@@ -40,8 +40,8 @@ export const service = defineType({
   ],
   preview: {
     select: { title: 'title', order: 'order' },
-    prepare: ({ title, order }: { title: string; order: number }) => ({
-      title: `${order}. ${title}`,
+    prepare: (selection: Record<string, any>) => ({
+      title: `${selection.order}. ${selection.title}`,
     }),
   },
 });

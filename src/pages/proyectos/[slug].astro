@@ -1,60 +1,135 @@
 ---
 import ProjectLayout from '../../layouts/ProjectLayout.astro';
-import { getSiteSettings, getProjectBySlug, getAllProjectSlugs, extractVimeoId, urlFor } from '../../lib/sanity';
+import Lightbox from '../../components/Lightbox.astro';
+import ProjectGallery from '../../components/ProjectGallery.astro';
+import RichText from '../../components/RichText.astro';
+import {
+  extractVimeoId,
+  getAllProjects,
+  getSiteSettings,
+  imageSrc,
+  toPlainText,
+  type Project,
+  type SiteSettings,
+} from '../../lib/sanity';
 
+// One query for every project page: also gives us the neighbours for the
+// prev/next links at the bottom.
 export async function getStaticPaths() {
-  const slugs = await getAllProjectSlugs();
-  return slugs.map(({ slug }) => ({ params: { slug } }));
+  const [projects, settings] = await Promise.all([getAllProjects(), getSiteSettings()]);
+
+  return projects
+    .filter((project) => project.slug?.current)
+    .map((project, index) => ({
+      params: { slug: project.slug.current },
+      props: {
+        project,
+        settings,
+        prev: projects[index - 1] ?? null,
+        next: projects[index + 1] ?? null,
+      },
+    }));
 }
 
-const { slug } = Astro.params;
-const [settings, project] = await Promise.all([
-  getSiteSettings(),
-  getProjectBySlug(slug as string),
-]);
-
-if (!project) {
-  return Astro.redirect('/portfolio');
+interface Props {
+  project: Project;
+  settings: SiteSettings | null;
+  prev: Project | null;
+  next: Project | null;
 }
+
+const { project, settings, prev, next } = Astro.props;
 
 const vimeoId = project.vimeoUrl ? extractVimeoId(project.vimeoUrl) : null;
+const gallery = project.gallery ?? [];
+const excerpt =
+  toPlainText(project.body) || project.description || `Proyecto de Kaiju TV: ${project.title}`;
+const shareImage = project.thumbnail ? imageSrc(project.thumbnail, 1200) : undefined;
 
 const categoryLabels: Record<string, string> = {
   'motion-graphics': 'Motion Graphics',
-  'branding': 'Branding',
+  branding: 'Branding',
   'explainer-video': 'Explainer Video',
   'contenido-rrss': 'Contenido RRSS',
   'publicidad-online': 'Publicidad Online',
   'broadcast-design': 'Broadcast Design',
   'brand-video': 'Brand Video',
-  'otro': 'Otro',
+  otro: 'Otro',
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.title,
+  description: excerpt.slice(0, 300),
+  genre: categoryLabels[project.category] ?? project.category,
+  keywords: (project.tags ?? []).map((tag) => tag.title).join(', ') || undefined,
+  creator: { '@type': 'Organization', name: 'Kaiju TV' },
+  ...(project.client ? { sourceOrganization: { '@type': 'Organization', name: project.client } } : {}),
+  ...(shareImage ? { image: shareImage } : {}),
 };
 ---
 
 <ProjectLayout
   title={`${project.title} — Kaiju TV`}
-  description={project.description ?? `Proyecto de Kaiju TV: ${project.title}`}
+  description={excerpt.slice(0, 160)}
   settings={settings}
+  image={shareImage}
+  jsonLd={jsonLd}
 >
   <article class="bg-kaiju-bg min-h-screen">
-
-    <div class="max-w-[940px] mx-auto px-6 pt-24 pb-16">
+    <div class="max-w-[1100px] mx-auto px-6 pt-16 pb-20">
 
       <!-- Back arrow — aligned to container left, no text -->
-      <a
-        href="/portfolio"
-        aria-label="Volver al portfolio"
-        class="inline-block mb-10"
-      >
-        <img src="/back-arrow.png" alt="Volver" class="w-9 h-9 object-contain transition-transform duration-200 hover:scale-110" />
+      <a href="/portfolio" aria-label="Volver al portfolio" class="inline-block mb-10 group">
+        <img
+          src="/back-arrow.png"
+          alt=""
+          width="36"
+          height="36"
+          class="w-9 h-9 object-contain transition-transform duration-200 group-hover:-translate-x-1"
+        />
       </a>
 
-      <!-- Vimeo embed -->
+      <!-- Header -->
+      <header class="mb-10 max-w-3xl">
+        <p class="font-body text-xs uppercase tracking-[0.18em] text-kaiju-red-title mb-3">
+          {categoryLabels[project.category] ?? project.category}
+        </p>
+        <h1
+          class="font-heading uppercase leading-tight text-white"
+          style="font-size: clamp(1.75rem, 5vw, 2.75rem); font-weight: 900; letter-spacing: 0.02em;"
+        >
+          {project.title}
+        </h1>
+        {project.client && (
+          <p class="font-body text-sm text-kaiju-dim-grey mt-3 uppercase" style="letter-spacing: 0.06em;">
+            Cliente — {project.client}
+          </p>
+        )}
+
+        {project.tags && project.tags.length > 0 && (
+          <ul class="flex flex-wrap gap-2 mt-6 list-none p-0">
+            {project.tags.map((tag) => (
+              <li>
+                <a
+                  href={`/portfolio?tag=${tag.slug}`}
+                  class="inline-block font-body text-[11px] uppercase tracking-[0.12em] px-3 py-1.5 border border-white/15 text-white/70 hover:border-kaiju-red hover:text-white hover:bg-kaiju-red transition-colors"
+                >
+                  {tag.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </header>
+
+      <!-- Main video -->
       {vimeoId && (
         <div class="relative w-full mb-14" style="padding-top: 56.25%">
           <iframe
             class="absolute inset-0 w-full h-full"
-            src={`https://player.vimeo.com/video/${vimeoId}?color=e63838&title=0&byline=0&portrait=0`}
+            src={`https://player.vimeo.com/video/${vimeoId}?color=e63838&title=0&byline=0&portrait=0&dnt=1`}
             allow="autoplay; fullscreen; picture-in-picture"
             allowfullscreen
             title={project.title}
@@ -62,64 +137,44 @@ const categoryLabels: Record<string, string> = {
         </div>
       )}
 
-      <!-- Title (left) + Description (right) -->
-      <div class="grid md:grid-cols-2 gap-10 mb-14">
-        <div>
-          <h2 class="font-heading uppercase leading-tight">
-            {project.title}
-          </h2>
-          {project.client && (
-            <p class="font-body text-sm text-gray-500 mt-2 uppercase" style="letter-spacing: 0.03em;">
-              {project.client}
-            </p>
-          )}
-          {project.behanceUrl && (
+      <!-- Description -->
+      {(project.body?.length || project.description) && (
+        <div class="max-w-2xl mb-14">
+          <RichText value={project.body} fallback={project.description} />
+        </div>
+      )}
+
+      <!-- Gallery -->
+      {gallery.length > 0 && <ProjectGallery items={gallery} projectTitle={project.title} />}
+
+      <!-- Prev / next -->
+      {(prev || next) && (
+        <nav class="mt-20 pt-8 border-t border-white/10 flex justify-between gap-6" aria-label="Más proyectos">
+          {prev ? (
             <a
-              href={project.behanceUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-3 mt-6 text-white/70 hover:text-white transition-colors font-body text-sm"
+              href={`/proyectos/${prev.slug.current}`}
+              class="group font-body text-xs uppercase tracking-[0.12em] text-kaiju-dim-grey hover:text-white transition-colors max-w-[45%]"
             >
-              <img src="/icons/behance.png" alt="Behance" class="w-8 h-8 object-contain" />
-              Ver en Behance
+              <span class="block text-[10px] text-white/30 mb-1">Anterior</span>
+              <span class="inline-block group-hover:-translate-x-1 transition-transform">← {prev.title}</span>
+            </a>
+          ) : (
+            <span></span>
+          )}
+          {next && (
+            <a
+              href={`/proyectos/${next.slug.current}`}
+              class="group font-body text-xs uppercase tracking-[0.12em] text-kaiju-dim-grey hover:text-white transition-colors text-right max-w-[45%]"
+            >
+              <span class="block text-[10px] text-white/30 mb-1">Siguiente</span>
+              <span class="inline-block group-hover:translate-x-1 transition-transform">{next.title} →</span>
             </a>
           )}
-        </div>
-
-        {project.description && (
-          <div class="font-body text-gray-400 text-sm leading-relaxed">
-            {project.description.split('\n').map((para) => (
-              <p class="mb-3">{para}</p>
-            ))}
-          </div>
-        )}
-      </div>
-
-      <!-- Gallery — one column, images and Vimeo embeds from Sanity -->
-      {project.gallery && project.gallery.length > 0 && (
-        <div class="flex flex-col gap-1">
-          {project.gallery.map((item) => (
-            item._type === 'vimeoItem' ? (
-              <div class="relative w-full" style="padding-top: 56.25%">
-                <iframe
-                  class="absolute inset-0 w-full h-full"
-                  src={`https://player.vimeo.com/video/${extractVimeoId(item.vimeoUrl)}?color=e63838&title=0&byline=0&portrait=0`}
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
-              </div>
-            ) : (
-              <img
-                src={urlFor(item).width(1880).url()}
-                alt={project.title}
-                class="w-full block"
-                loading="lazy"
-              />
-            )
-          ))}
-        </div>
+        </nav>
       )}
 
     </div>
   </article>
+
+  <Lightbox />
 </ProjectLayout>

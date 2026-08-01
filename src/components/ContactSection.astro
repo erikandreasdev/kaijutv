@@ -1,0 +1,384 @@
+---
+import MailLink from './MailLink.astro';
+import { encodeEmail, humanizeEmail } from '../lib/email';
+
+interface Props {
+  email: string;
+}
+
+const { email } = Astro.props;
+
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT;
+---
+
+<section id="contacto" class="shadow-inset-top bg-kaiju-red py-24 px-6">
+  <div
+    class="max-w-[940px] mx-auto bg-white p-8 md:p-14"
+    style="box-shadow: 0 24px 64px rgba(0,0,0,0.22), 0 6px 20px rgba(0,0,0,0.10);"
+  >
+    <div class="flex flex-col md:flex-row items-start gap-10">
+      <div class="flex-1 min-w-0 w-full">
+        <h2 class="font-heading uppercase mb-3 text-xl leading-tight" style="color: #ff3838;">
+          CUÉNTAME TU PROYECTO
+        </h2>
+        <p class="text-gray-500 text-sm leading-relaxed mb-8">
+          Promocionar tus servicios con un video explicativo, destacarte en redes sociales con
+          banners y loops animados, crear tu propia marca dinámica con video corporativo… Todo eso
+          y más lo podemos cocinar juntos. Escríbeme y te contesto en 24-48 h.
+        </p>
+
+        <form
+          id="contact-form"
+          class="contact-form"
+          novalidate
+          data-endpoint={endpoint}
+          data-mail={encodeEmail(email)}
+        >
+          <div class="field">
+            <label for="cf-name">Nombre *</label>
+            <input id="cf-name" name="name" type="text" required autocomplete="name" maxlength="80" />
+          </div>
+
+          <div class="field">
+            <label for="cf-email">Email *</label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" maxlength="120" />
+          </div>
+
+          <div class="field">
+            <label for="cf-message">¿Qué necesitas? *</label>
+            <textarea id="cf-message" name="message" rows="5" required maxlength="2000"></textarea>
+          </div>
+
+          <!-- Honeypot: invisible to people, irresistible to bots. -->
+          <div class="hp-field" aria-hidden="true">
+            <label for="cf-website">No rellenes este campo</label>
+            <input id="cf-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+
+          {turnstileSiteKey ? (
+            <div class="field">
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" data-language="es"></div>
+            </div>
+          ) : (
+            <div class="field" id="cf-challenge-field">
+              <label for="cf-challenge">
+                Verificación antispam: <span id="cf-challenge-question">…</span> *
+              </label>
+              <input
+                id="cf-challenge"
+                name="challenge"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                required
+                maxlength="4"
+              />
+            </div>
+          )}
+
+          <button type="submit" class="submit-btn">ENVIAR MENSAJE</button>
+
+          <p id="cf-status" class="cf-status" role="status" aria-live="polite"></p>
+
+          <p class="cf-note">
+            Tus datos sólo se usan para responderte. Nunca se comparten con terceros.
+          </p>
+        </form>
+
+        <noscript>
+          <p class="text-gray-500 text-sm mt-4">
+            El formulario necesita JavaScript. Escríbeme directamente a
+            <strong>{humanizeEmail(email)}</strong>.
+          </p>
+        </noscript>
+
+        <p class="text-gray-400 text-xs mt-6">
+          ¿Prefieres el correo de siempre?
+          <MailLink
+            email={email}
+            class="text-kaiju-red hover:text-kaiju-red-hover underline"
+            subject="Consulta desde kaiju-tv.com"
+          />
+        </p>
+      </div>
+
+      <div class="flex-shrink-0 hidden md:flex items-center justify-center self-center">
+        <img
+          src="/trabajemos-juntos.gif"
+          alt="Trabajemos juntos - Kaiju TV"
+          width="300"
+          height="300"
+          loading="lazy"
+          class="w-[260px] object-contain"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+{turnstileSiteKey && (
+  <script is:inline async defer src="https://challenges.cloudflare.com/turnstile/v0/api.js"></script>
+)}
+
+<style>
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 34rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .field label {
+    font-family: Raleway, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #6e7373;
+  }
+
+  .field input,
+  .field textarea {
+    font-family: Raleway, sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color: #232424;
+    background: #f4f5f5;
+    border: 1px solid #e2e4e4;
+    padding: 0.7rem 0.85rem;
+    width: 100%;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    background: #fff;
+    border-color: #e63838;
+  }
+
+  .field input[aria-invalid='true'],
+  .field textarea[aria-invalid='true'] {
+    border-color: #e63838;
+    background: #fdf0f0;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 120px;
+  }
+
+  /* Honeypot — off-screen rather than display:none, which some bots skip. */
+  .hp-field {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .submit-btn {
+    align-self: flex-start;
+    font-family: Raleway, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #fff;
+    background: #e63838;
+    border: 0;
+    padding: 0.9rem 2.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    background: #bf3535;
+  }
+
+  .submit-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .submit-btn:focus-visible {
+    outline: 2px solid #232424;
+    outline-offset: 2px;
+  }
+
+  .cf-status {
+    font-family: Raleway, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    margin: 0;
+    min-height: 1.2em;
+  }
+
+  .cf-status.is-error {
+    color: #bf3535;
+  }
+
+  .cf-status.is-success {
+    color: #1f8a4c;
+  }
+
+  .cf-note {
+    font-family: Raleway, sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: #a0a3a2;
+    margin: 0;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+
+  if (form) {
+    const status = document.getElementById('cf-status')!;
+    const button = form.querySelector<HTMLButtonElement>('.submit-btn')!;
+    const challengeInput = form.querySelector<HTMLInputElement>('#cf-challenge');
+    const questionEl = document.getElementById('cf-challenge-question');
+
+    const endpoint = form.dataset.endpoint || '';
+    const accessKey = import.meta.env.PUBLIC_CONTACT_ACCESS_KEY as string | undefined;
+    const mailFallback = form.dataset.mail;
+
+    // Bots submit instantly; people take a few seconds to type.
+    const renderedAt = Date.now();
+    const MIN_FILL_MS = 4000;
+
+    // Arithmetic challenge, generated in the browser so it never sits in the
+    // static HTML for a crawler to pre-solve.
+    let expected = 0;
+    if (challengeInput && questionEl) {
+      const a = 2 + Math.floor(Math.random() * 7);
+      const b = 1 + Math.floor(Math.random() * 6);
+      expected = a + b;
+      questionEl.textContent = `¿cuánto es ${a} + ${b}?`;
+    }
+
+    function setStatus(message: string, kind: 'error' | 'success' | '' = '') {
+      status.textContent = message;
+      status.classList.toggle('is-error', kind === 'error');
+      status.classList.toggle('is-success', kind === 'success');
+    }
+
+    function markInvalid(field: HTMLInputElement | HTMLTextAreaElement, invalid: boolean) {
+      if (invalid) field.setAttribute('aria-invalid', 'true');
+      else field.removeAttribute('aria-invalid');
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const data = new FormData(form);
+      const name = String(data.get('name') ?? '').trim();
+      const email = String(data.get('email') ?? '').trim();
+      const message = String(data.get('message') ?? '').trim();
+      const honeypot = String(data.get('website') ?? '').trim();
+
+      const nameField = form.querySelector<HTMLInputElement>('#cf-name')!;
+      const emailField = form.querySelector<HTMLInputElement>('#cf-email')!;
+      const messageField = form.querySelector<HTMLTextAreaElement>('#cf-message')!;
+
+      markInvalid(nameField, !name);
+      markInvalid(emailField, !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email));
+      markInvalid(messageField, message.length < 10);
+
+      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || message.length < 10) {
+        setStatus('Revisa los campos marcados: el mensaje debe tener al menos 10 caracteres.', 'error');
+        return;
+      }
+
+      // Honeypot: only bots fill it. Fake a success so they do not learn why.
+      if (honeypot) {
+        setStatus('¡Gracias! Tu mensaje ha sido enviado.', 'success');
+        form.reset();
+        return;
+      }
+
+      if (challengeInput) {
+        markInvalid(challengeInput, Number(challengeInput.value) !== expected);
+        if (Number(challengeInput.value) !== expected) {
+          setStatus('La verificación antispam no es correcta. Inténtalo de nuevo.', 'error');
+          return;
+        }
+      }
+
+      const turnstileToken = String(data.get('cf-turnstile-response') ?? '');
+      const turnstileWidget = form.querySelector('.cf-turnstile');
+      if (turnstileWidget && !turnstileToken) {
+        setStatus('Completa la verificación antes de enviar.', 'error');
+        return;
+      }
+
+      button.disabled = true;
+      setStatus('Enviando…');
+
+      // Time trap: scripted submissions fire instantly. Rather than rejecting
+      // (which would punish a fast human or an autofill), hold the request back
+      // until the window has elapsed — bots do not stick around for it.
+      const elapsed = Date.now() - renderedAt;
+      if (elapsed < MIN_FILL_MS) {
+        await new Promise((resolve) => setTimeout(resolve, MIN_FILL_MS - elapsed));
+      }
+
+      if (!endpoint) {
+        // No form backend configured: hand the message to the mail client with
+        // everything pre-filled, which still keeps the address out of the HTML.
+        const address = mailFallback ? atob(mailFallback) : '';
+        if (!address) {
+          button.disabled = false;
+          setStatus('El formulario no está configurado todavía. Vuelve a intentarlo más tarde.', 'error');
+          return;
+        }
+        const body = `Nombre: ${name}\nEmail: ${email}\n\n${message}`;
+        window.location.href = `mailto:${address}?subject=${encodeURIComponent(
+          `Nuevo proyecto — ${name}`
+        )}&body=${encodeURIComponent(body)}`;
+        button.disabled = false;
+        setStatus('Se ha abierto tu cliente de correo con el mensaje listo para enviar.', 'success');
+        return;
+      }
+
+      try {
+        const payload: Record<string, string> = {
+          name,
+          email,
+          message,
+          subject: `Nuevo proyecto desde kaiju-tv.com — ${name}`,
+          from_name: 'Kaiju TV web',
+        };
+        if (accessKey) payload.access_key = accessKey;
+        if (turnstileToken) payload['cf-turnstile-response'] = turnstileToken;
+
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        form.reset();
+        setStatus('¡Gracias! He recibido tu mensaje y te contesto en 24-48 h.', 'success');
+      } catch {
+        setStatus(
+          'No se ha podido enviar el mensaje. Inténtalo de nuevo o escríbeme por email.',
+          'error'
+        );
+      } finally {
+        button.disabled = false;
+        (window as any).turnstile?.reset?.();
+      }
+    });
+  }
+</script>

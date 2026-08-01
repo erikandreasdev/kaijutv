@@ -19,46 +19,201 @@ const defaultServices = [
   {
     _id: 'default-2',
     title: 'Contenido para RRSS',
-    description: 'Piezas para redes sociales enfocadas en generar contenido de interés para el usuario.',
+    description:
+      'Piezas para redes sociales enfocadas en generar contenido de interés para el usuario.',
     order: 2,
     localIcon: '/icons/service-rrss.png',
   },
   {
     _id: 'default-3',
     title: 'Publicidad online',
-    description: 'Formatos de animación muy breves diseñados para Email marketing o Facebook Ads.',
+    description:
+      'Formatos de animación muy breves diseñados para Email marketing o Facebook Ads.',
     order: 3,
     localIcon: '/icons/service-publicidad.png',
   },
 ];
 
-const displayServices = services.length > 0 ? services : defaultServices;
+const displayServices: any[] = services.length > 0 ? services : defaultServices;
 ---
 
-<section class="bg-kaiju-bg py-16 px-6">
+<section id="servicios" class="bg-kaiju-bg py-20 px-6">
   <div class="max-w-[940px] mx-auto">
-    <h2 class="font-heading text-3xl uppercase text-center mb-12">
-      SERVICIOS
-    </h2>
+    <p class="font-body text-[11px] uppercase text-center text-kaiju-dim-grey mb-3" style="letter-spacing: 0.22em;">
+      Qué puedo hacer por ti
+    </p>
+    <h2 class="font-heading text-3xl uppercase text-center mb-3">SERVICIOS</h2>
+    <p class="font-body text-sm text-center text-kaiju-grey-body max-w-lg mx-auto mb-14">
+      Diseño y animación a medida, del concepto a la pieza final lista para publicar.
+    </p>
 
-    <div class="grid md:grid-cols-3 gap-8">
-      {displayServices.map((svc: any) => (
-        <div class="text-center p-6">
+    <div class="grid md:grid-cols-3 gap-5">
+      {displayServices.map((svc, index) => (
+        <article class="service-card" style={`--delay: ${index * 90}ms`}>
+          <span class="service-index" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+
           {(svc.icon || svc.localIcon) && (
             <img
-              src={svc.icon ? urlFor(svc.icon).width(80).url() : svc.localIcon}
-              alt={svc.title}
-              class="w-24 h-24 object-contain mx-auto mb-4 opacity-80"
+              src={svc.icon ? urlFor(svc.icon).width(160).url() : svc.localIcon}
+              alt=""
+              width="80"
+              height="80"
+              loading="lazy"
+              decoding="async"
+              class="service-icon"
             />
           )}
-          <h3 class="mb-3" style="font-family: Raleway, sans-serif; font-size: 22px; font-weight: 700; color: #a0a3a2;">
-            {svc.title}
-          </h3>
-          <p class="font-body text-gray-400 text-sm leading-relaxed">
-            {svc.description}
-          </p>
-        </div>
+
+          <h3 class="service-title">{svc.title}</h3>
+          <p class="service-text">{svc.description}</p>
+
+          <span class="service-rule" aria-hidden="true"></span>
+        </article>
       ))}
     </div>
   </div>
 </section>
+
+<style>
+  .service-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 2.25rem 1.75rem 2rem;
+    overflow: hidden;
+    background: linear-gradient(160deg, #1f2020 0%, #191a1a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+
+  /* Reveal on scroll (progressive enhancement — visible by default). */
+  .service-card.will-reveal {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .service-card.is-revealed {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.6s ease var(--delay, 0ms),
+      transform 0.6s ease var(--delay, 0ms),
+      border-color 0.35s ease,
+      box-shadow 0.35s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(230, 56, 56, 0.55);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+
+  .service-index {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.9rem;
+    font-family: Raleway, sans-serif;
+    font-size: 62px;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.04);
+    transition: color 0.35s ease;
+    pointer-events: none;
+  }
+
+  .service-card:hover .service-index {
+    color: rgba(230, 56, 56, 0.18);
+  }
+
+  .service-icon {
+    width: 68px;
+    height: 68px;
+    object-fit: contain;
+    opacity: 0.85;
+    transition: transform 0.35s ease, opacity 0.35s ease;
+  }
+
+  .service-card:hover .service-icon {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+
+  .service-title {
+    font-family: Raleway, sans-serif;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+  }
+
+  .service-text {
+    font-family: Raleway, sans-serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.65;
+    color: #a0a3a2;
+    margin: 0;
+  }
+
+  .service-rule {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 100%;
+    background: #e63838;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+  }
+
+  .service-card:hover .service-rule {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-card,
+    .service-card.is-revealed,
+    .service-icon,
+    .service-rule,
+    .service-index {
+      transition: none;
+    }
+    .service-card:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  const cards = document.querySelectorAll<HTMLElement>('.service-card');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (cards.length && !reduceMotion && 'IntersectionObserver' in window) {
+    cards.forEach((card) => card.classList.add('will-reveal'));
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+
+    // Safety net: never leave content invisible if the observer never fires
+    // (printing, headless renderers, odd scroll containers).
+    window.setTimeout(() => {
+      cards.forEach((card) => card.classList.add('is-revealed'));
+    }, 3000);
+  }
+</script>

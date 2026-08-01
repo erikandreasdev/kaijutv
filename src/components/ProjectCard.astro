@@ -1,29 +1,36 @@
 ---
 import type { Project } from '../lib/sanity';
-import { urlFor } from '../lib/sanity';
+import { imageSrc } from '../lib/sanity';
 
 interface Props {
   project: Project;
+  /** First cards are above the fold — skip lazy loading for those. */
+  eager?: boolean;
 }
 
-const { project } = Astro.props;
+const { project, eager = false } = Astro.props;
 const slug = project.slug.current;
 
-const thumbnailUrl = project.thumbnail
-  ? urlFor(project.thumbnail).url()
-  : null;
+const thumbnailUrl = project.thumbnail ? imageSrc(project.thumbnail, 800) : null;
+const tagSlugs = (project.tags ?? []).map((tag) => tag.slug).join(' ');
 ---
 
 <a
   href={`/proyectos/${slug}`}
-  class="relative group block overflow-hidden bg-kaiju-dark aspect-[3/2]"
+  data-project-card
+  data-tags={tagSlugs}
+  class="relative group block overflow-hidden bg-kaiju-dark aspect-[3/2] focus-visible:outline-2 focus-visible:outline-kaiju-red focus-visible:outline-offset-2"
 >
   {thumbnailUrl ? (
     <img
       src={thumbnailUrl}
-      alt={project.title}
+      alt={project.thumbnail?.alt || project.title}
       class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-      loading="lazy"
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      style={project.thumbnail?.lqip
+        ? `background-image:url(${project.thumbnail.lqip});background-size:cover;`
+        : undefined}
     />
   ) : (
     <div class="w-full h-full bg-gray-800 flex items-center justify-center">
@@ -31,9 +38,17 @@ const thumbnailUrl = project.thumbnail
     </div>
   )}
 
-  <div class="absolute inset-0 bg-kaiju-red opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-6">
-    <h3 class="font-heading text-white uppercase text-center leading-tight" style="font-weight: 900; font-size: clamp(0.75rem, 3cqi, 1.1rem);">
+  <div class="absolute inset-0 bg-kaiju-red opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center p-6 gap-2">
+    <h3
+      class="font-heading text-white uppercase text-center leading-tight"
+      style="font-weight: 900; font-size: clamp(0.75rem, 3cqi, 1.1rem);"
+    >
       {project.title}
     </h3>
+    {project.tags && project.tags.length > 0 && (
+      <p class="font-body text-white/75 text-[10px] uppercase text-center" style="letter-spacing: 0.12em;">
+        {project.tags.map((tag) => tag.title).join(' · ')}
+      </p>
+    )}
   </div>
 </a>

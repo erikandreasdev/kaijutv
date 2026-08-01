@@ -1,4 +1,5 @@
 ---
+import MailLink from './MailLink.astro';
 import type { SiteSettings } from '../lib/sanity';
 
 interface Props {
@@ -35,7 +36,10 @@ const socialIcons: Record<string, string> = {
     <div class="flex items-center gap-5 font-body text-xs tracking-wide">
       <a href="/aviso-legal" class="text-white transition-transform duration-200 hover:scale-105 inline-block">Aviso Legal</a>
       <span class="text-white/30">|</span>
-      <a href={`mailto:${email}`} class="text-white transition-transform duration-200 hover:scale-105 inline-block">{email}</a>
+      <MailLink
+        email={email}
+        class="text-white transition-transform duration-200 hover:scale-105 inline-block"
+      />
     </div>
 
     <!-- Social icons -->

@@ -59,8 +59,8 @@ export const siteSettings = defineType({
           ],
           preview: {
             select: { value: 'value', label: 'label' },
-            prepare: ({ value, label }: { value: string; label: string }) => ({
-              title: `${value} — ${label}`,
+            prepare: (selection: Record<string, any>) => ({
+              title: `${selection.value} — ${selection.label}`,
             }),
           },
         },
@@ -75,7 +75,17 @@ export const siteSettings = defineType({
       name: 'email',
       title: 'Email de contacto',
       type: 'string',
+      description:
+        'No se publica en texto plano en el HTML: la web lo ofusca para que los robots de spam no puedan leerlo.',
       initialValue: 'info@kaiju-tv.com',
+    }),
+    defineField({
+      name: 'ogImage',
+      title: 'Imagen para redes sociales',
+      type: 'image',
+      description:
+        'Se muestra al compartir la web en WhatsApp, LinkedIn, X… Tamaño recomendado: 1200×630 px.',
+      options: { hotspot: true },
     }),
     defineField({
       name: 'socialLinks',
@@ -103,9 +113,9 @@ export const siteSettings = defineType({
           ],
           preview: {
             select: { platform: 'platform', url: 'url' },
-            prepare: ({ platform, url }: { platform: string; url: string }) => ({
-              title: platform,
-              subtitle: url,
+            prepare: (selection: Record<string, any>) => ({
+              title: selection.platform,
+              subtitle: selection.url,
             }),
           },
         },
